@@ -48,3 +48,6 @@ Desktop.ini
 .idea/
 *.suo
 *.user
+node_modules/
+scripts/node_modules/
+scripts/package*.json
