@@ -1,38 +1,45 @@
-# Reporte Técnico de Implementación y Optimización en PostgreSQL 17
+# Reporte Técnico de Implementación, Benchmarking y Optimización en PostgreSQL 17
 ## Sistema de Gestión de Inventario para Retail (`retail-postgresql-sgbd`)
 
 ---
 
 ### 1. Resumen Ejecutivo y Entorno de Ejecución
 
-Este informe documenta la implementación física, validación de integridad referencial, benchmarking y optimización de consultas del modelo relacional para el sistema de inventario retail en una base de datos PostgreSQL independiente.
+Este informe documenta la implementación física, validación de integridad referencial, benchmarking de rendimiento y optimización de consultas del modelo relacional para el sistema de inventario retail en una base de datos PostgreSQL independiente.
 
-* **Motor de Base de Datos:** PostgreSQL 17.2 (x86_64-windows, compilado por MSVC 19.41.34123, 64-bit)
-* **Entorno de Despliegue:** Binarios portátiles independientes de PostgreSQL 17 en espacio de usuario (`./pgsql/bin/`) y orquestación reproducible complementaria en contenedor mediante Docker Compose (`postgres:17-alpine` + `pgadmin4`).
-* **Base de Datos Implementada:** `retail_inventory_db`
-* **Esquema:** Relacional normalizado en Tercera Forma Normal (3FN), nombres en `snake_case`, restricciones de dominio y reglas de integridad referencial activas.
-* **Fecha y Hora de Auditoría:** Noviembre 2026.
+* **Motor de Base de Datos:** PostgreSQL 17.2 (x86_64-windows, compilado por MSVC 19.41.34123, 64-bit).
+* **Entornos de Despliegue:**
+  * *Entorno local de desarrollo y benchmarking:* Binarios portátiles oficiales de PostgreSQL 17.2 en espacio de usuario (`./pgsql/`), excluidos de Git por buenas prácticas de tamaño.
+  * *Entorno reproducible para terceros:* Orquestación en contenedores mediante Docker Compose (`postgres:17-alpine` + `pgadmin4`), con persistencia de volúmenes y montaje directo de los scripts DDL/DML.
+* **Base de Datos Implementada:** `retail_inventory_db`.
+* **Esquema:** Relacional normalizado en Tercera Forma Normal (3FN), nombres en `snake_case`, claves foráneas con reglas de acción referencial (`ON DELETE RESTRICT` / `CASCADE`) y restricciones `CHECK`.
+* **Periodo de Datos:** Todas las transacciones, compras y movimientos de inventario se encuentran estrictamente acotados dentro del año **2026**.
 
 ---
 
 ### 2. Estructura y Volumen Real de Datos Cargados
 
-Se ejecutó la carga masiva mediante funciones generadoras matemáticas deterministas (`generate_series()`, `setseed(0.42)`, `make_interval()`) garantizando selectividad realista sin sesgos de muestreo trivial.
+Se ejecutó la carga masiva mediante funciones generadoras deterministas reproducibles (`generate_series()`, `setseed(0.42)`, `make_interval()`) garantizando una selectividad realista y representativa:
 
 | # | Nombre de la Tabla | Conteo Real de Filas | Propósito y Relaciones |
 |---|-------------------|---------------------:|-------------------------|
-| 1 | `categoria` | 20 | Catálogo de familias de productos del sector retail. |
+| 1 | `categoria` | 20 | Familias de artículos del sector retail. |
 | 2 | `sucursal` | 10 | Puntos de venta físicos en ciudades principales. |
 | 3 | `proveedor` | 100 | Proveedores comerciales mayoristas. |
-| 4 | `producto` | 5,000 | Catálogo maestro de SKUs con precios de compra y venta. |
-| 5 | `producto_proveedor` | 10,000 | Tabla puente N:M asociando 2 proveedores por producto. |
-| 6 | `inventario` | 50,000 | Existencia y stock mínimo por cada combinación sucursal-producto. |
-| 7 | `movimiento_inventario` | 120,000 | Trazabilidad histórica (ENTRADA, SALIDA, AJUSTE). |
-| 8 | `venta` | 47,002 | Transacciones comerciales en sucursales a lo largo de 2026. |
-| 9 | `detalle_venta` | 86,167 | Renglones de venta con coherencia estricta cantidad/subtotal. |
-| 10 | `compra` | 12,000 | Órdenes de abastecimiento emitidas a proveedores. |
+| 4 | `producto` | 5,000 | Catálogo maestro de SKUs con precios de compra y venta (`precio_venta >= precio_compra`). |
+| 5 | `producto_proveedor` | 10,000 | Tabla puente N:M (asociando 2 proveedores por producto). |
+| 6 | `inventario` | 50,000 | Existencia y stock mínimo por cada combinación sucursal-producto ($10 \times 5,000$). |
+| 7 | `movimiento_inventario` | 120,001 | Histórico de trazabilidad (`ENTRADA`, `SALIDA`, `AJUSTE`) entre enero y noviembre de 2026. |
+| 8 | `venta` | 47,001 | Transacciones comerciales registradas en sucursales a lo largo de 2026. |
+| 9 | `detalle_venta` | 86,167 | Renglones de venta con coherencia estricta en cantidad, precio unitario y subtotal. |
+| 10 | `compra` | 12,000 | Órdenes de abastecimiento emitidas a proveedores durante 2026. |
 | 11 | `detalle_compra` | 27,600 | Renglones de compra por producto y costo unitario. |
-| **TOTAL** | **Volumen Global** | **357,899 registros** | Base robusta para validación de índices y planes de ejecución. |
+| **TOTAL** | **Volumen Global** | **357,899 registros** | Base de datos con volumen suficiente para evaluación realista de planes. |
+
+#### Rango Temporal Verificado en `movimiento_inventario`:
+* **Fecha mínima general:** `2026-01-01 09:01:04`
+* **Fecha máxima general:** `2026-11-08 07:13:22`
+* **Movimientos específicos Sucursal 3 + Producto 125:** 150 registros comprendidos entre `2026-01-07 09:28:00` y `2026-11-01 09:15:54`.
 
 ---
 
@@ -65,7 +72,7 @@ Se ejecutó la carga masiva mediante funciones generadoras matemáticas determin
 
 #### 4.1 Consulta 1 — Detección de Stock Bajo por Sucursal
 
-**Objetivo:** Identificar oportunamente artículos cuyo nivel de existencia sea igual o inferior al stock mínimo en la Sucursal 3 (`Insurgentes Sur`), ordenados alfabéticamente por nombre.
+**Objetivo:** Identificar oportunamente artículos cuyo nivel de existencia sea igual o inferior al stock mínimo en la Sucursal 3 (`Insurgentes Sur`), ordenados alfabéticamente por nombre de producto.
 
 **Sentencia SQL:**
 ```sql
@@ -82,53 +89,48 @@ WHERE i.id_sucursal = 3
 ORDER BY p.nombre;
 ```
 
-**Resultado Funcional Resumido:**
-* **Filas retornadas:** 639 productos con stock bajo en Sucursal 3.
-* **Ejemplo de filas:**
-  * `PROD-SKU-000029` | `Producto Cat10 Modelo 00029` | existencia: 9 | stock_minimo: 23
-  * `PROD-SKU-000069` | `Producto Cat10 Modelo 00069` | existencia: 3 | stock_minimo: 10
-  * `PROD-SKU-000269` | `Producto Cat10 Modelo 00269` | existencia: 0 | stock_minimo: 18
+**Resultado Funcional:**
+* **Filas retornadas:** 639 productos con stock crítico en Sucursal 3.
 
 **Plan de Ejecución Real (`EXPLAIN (ANALYZE, BUFFERS)`):**
 ```text
-Sort  (cost=615.33..619.47 rows=1656 width=51) (actual time=2.165..2.183 rows=639 loops=1)
+Sort  (cost=615.81..619.97 rows=1661 width=51) (actual time=1.807..1.825 rows=639 loops=1)
   Sort Key: p.nombre
   Sort Method: quicksort  Memory: 69kB
   Buffers: shared hit=388
-  ->  Hash Join  (cost=401.66..526.79 rows=1656 width=51) (actual time=1.159..1.803 rows=639 loops=1)
+  ->  Hash Join  (cost=401.83..526.97 rows=1661 width=51) (actual time=0.932..1.599 rows=639 loops=1)
         Hash Cond: (p.id_producto = i.id_producto)
         Buffers: shared hit=385
-        ->  Seq Scan on producto p  (cost=0.00..112.00 rows=5000 width=47) (actual time=0.010..0.333 rows=5000 loops=1)
+        ->  Seq Scan on producto p  (cost=0.00..112.00 rows=5000 width=47) (actual time=0.009..0.342 rows=5000 loops=1)
               Buffers: shared hit=62
-        ->  Hash  (cost=380.96..380.96 rows=1656 width=12) (actual time=0.979..0.979 rows=639 loops=1)
+        ->  Hash  (cost=381.07..381.07 rows=1661 width=12) (actual time=0.913..0.913 rows=639 loops=1)
               Buckets: 2048  Batches: 1  Memory Usage: 44kB
               Buffers: shared hit=323
-              ->  Bitmap Heap Scan on inventario i  (cost=37.12..380.96 rows=1656 width=12) (actual time=0.081..0.916 rows=639 loops=1)
+              ->  Bitmap Heap Scan on inventario i  (cost=37.16..381.07 rows=1661 width=12) (actual time=0.080..0.854 rows=639 loops=1)
                     Recheck Cond: ((id_sucursal = 3) AND (existencia <= stock_minimo))
                     Heap Blocks: exact=319
                     Buffers: shared hit=323
-                    ->  Bitmap Index Scan on idx_inventario_stock_bajo  (cost=0.00..36.70 rows=1656 width=0) (actual time=0.051..0.051 rows=639 loops=1)
+                    ->  Bitmap Index Scan on idx_inventario_stock_bajo  (cost=0.00..36.74 rows=1661 width=0) (actual time=0.048..0.048 rows=639 loops=1)
                           Index Cond: (id_sucursal = 3)
                           Buffers: shared hit=4
 Planning:
   Buffers: shared hit=237
-Planning Time: 3.016 ms
-Execution Time: 2.265 ms
+Planning Time: 2.757 ms
+Execution Time: 1.900 ms
 ```
 
-**Métricas Clave:**
-* **Planning Time:** 3.016 ms
-* **Execution Time:** 2.265 ms
-* **Costo Estimado:** `615.33..619.47` (reducido respecto a 731.60 previo al índice)
-* **Buffers Totales:** 388 shared hit
-* **Tipo de Scan:** `Bitmap Index Scan` sobre `idx_inventario_stock_bajo` seguido de `Bitmap Heap Scan`.
-* **Uso del Índice:** Sí, utiliza `idx_inventario_stock_bajo`. Nótese que para escanear el índice solo necesitó **4 buffers de memoria**, descartando a nivel de índice el 87% de productos que no tenían stock bajo sin siquiera leerlos de disco o memoria intermedia.
+**Métricas y Análisis Técnico:**
+* **Planning Time:** 2.757 ms
+* **Execution Time:** **1.900 ms** (frente a 2.366 ms sin el índice, una reducción del **19.7%** en tiempo de ejecución).
+* **Buffers Compartidos Procesados:** 388 bloques encontrados en la memoria caché compartida (`shared hit`).
+* **Estrategia de Acceso:** `Bitmap Index Scan` sobre el índice parcial `idx_inventario_stock_bajo`.
+* **Justificación de Optimización:** En el plan sin índice especializado, el motor utilizaba la clave primaria `inventario_pkey`, debiendo examinar los 5,000 registros de la sucursal y descartar **4,361 filas en el Heap** mediante evaluación posfiltro. Con el índice parcial, la búsqueda en el árbol B-Tree consume únicamente **4 buffers compartidos**, localizando directamente las tuplas críticas y descartando 0 filas por filtro en la tabla.
 
 ---
 
 #### 4.2 Consulta 2 — Historial Cronológico de Movimientos por Producto
 
-**Objetivo:** Obtener los últimos 50 movimientos registrados de inventario para un artículo específico (`id_producto = 125`) en la Sucursal 3, ordenados de forma descendente por fecha.
+**Objetivo:** Auditar los últimos 50 movimientos registrados en el kardex para el Producto 125 en la Sucursal 3, ordenados de forma descendente por fecha.
 
 **Sentencia SQL:**
 ```sql
@@ -144,47 +146,49 @@ ORDER BY fecha DESC
 LIMIT 50;
 ```
 
-**Resultado Funcional Resumido:**
-* **Filas retornadas:** 50 filas (de un total de 150 movimientos históricos asociados a ese par sucursal-producto).
-* **Muestra de resultados:**
-  * `2027-01-12 09:45:54` | `ENTRADA` | 15 | `MOV-SUC3-P125-0150`
-  * `2027-01-10 21:22:05` | `AJUSTE`  | 15 | `MOV-SUC3-P125-0149`
-  * `2027-01-09 09:13:58` | `SALIDA`  | 5  | `MOV-SUC3-P125-0148`
+**Resultado Funcional:**
+* **Filas retornadas:** 50 filas (de un total de 150 movimientos históricos asociados a ese producto y sucursal dentro de 2026).
+* Muestra cronológica:
+  * `2026-11-01 09:15:54` | `ENTRADA` | 15 | `MOV-SUC3-P125-0150`
+  * `2026-10-30 08:52:05` | `AJUSTE`  | 15 | `MOV-SUC3-P125-0149`
+  * `2026-10-28 08:43:58` | `SALIDA`  | 5  | `MOV-SUC3-P125-0148`
 
 **Plan de Ejecución Real (`EXPLAIN (ANALYZE, BUFFERS)`):**
 ```text
-Limit  (cost=81.20..81.26 rows=21 width=35) (actual time=0.082..0.086 rows=50 loops=1)
+Limit  (cost=77.73..77.78 rows=20 width=35) (actual time=0.082..0.086 rows=50 loops=1)
   Buffers: shared hit=9
-  ->  Sort  (cost=81.20..81.26 rows=21 width=35) (actual time=0.082..0.083 rows=50 loops=1)
+  ->  Sort  (cost=77.73..77.78 rows=20 width=35) (actual time=0.082..0.083 rows=50 loops=1)
         Sort Key: fecha DESC
         Sort Method: top-N heapsort  Memory: 32kB
         Buffers: shared hit=9
-        ->  Bitmap Heap Scan on movimiento_inventario  (cost=4.63..80.74 rows=21 width=35) (actual time=0.029..0.048 rows=150 loops=1)
+        ->  Bitmap Heap Scan on movimiento_inventario  (cost=4.62..77.30 rows=20 width=35) (actual time=0.032..0.050 rows=150 loops=1)
               Recheck Cond: ((id_sucursal = 3) AND (id_producto = 125))
               Heap Blocks: exact=3
               Buffers: shared hit=6
-              ->  Bitmap Index Scan on idx_movimiento_sucursal_producto_fecha  (cost=0.00..4.63 rows=21 width=0) (actual time=0.015..0.015 rows=150 loops=1)
+              ->  Bitmap Index Scan on idx_movimiento_sucursal_producto_fecha  (cost=0.00..4.62 rows=20 width=0) (actual time=0.019..0.019 rows=150 loops=1)
                     Index Cond: ((id_sucursal = 3) AND (id_producto = 125))
                     Buffers: shared hit=3
 Planning:
-  Buffers: shared hit=82
-Planning Time: 1.460 ms
-Execution Time: 0.099 ms
+  Buffers: shared hit=83
+Planning Time: 1.214 ms
+Execution Time: 0.097 ms
 ```
 
-**Métricas Clave:**
-* **Planning Time:** 1.460 ms
-* **Execution Time:** **0.099 ms**
-* **Costo Estimado:** `81.20..81.26`
-* **Buffers Totales:** **9 shared hit** (3 en índice, 6 en heap)
-* **Tipo de Scan:** `Bitmap Index Scan` sobre `idx_movimiento_sucursal_producto_fecha` + `top-N heapsort` con `LIMIT 50`.
-* **Uso del Índice:** Sí, el índice compuesto `(id_sucursal, id_producto, fecha DESC)` permite ubicar inmediatamente los 150 registros exactos pertenecientes a dicha combinación en solo 3 bloques de datos (`Heap Blocks: exact=3`), evitando examinar los restantes 119,850 registros de la tabla.
+**Métricas y Análisis Técnico del Plan:**
+* **Planning Time:** 1.214 ms
+* **Execution Time:** **0.097 ms** (frente a 7.423 ms sin el índice, alcanzando un factor de aceleración de **76.5x** y una reducción del tiempo de ejecución del **98.7%**).
+* **Buffers Compartidos Procesados:** **9 buffers** encontrados en caché compartida (`shared hit`), frente a 1,241 buffers del escaneo secuencial (una reducción del **99.27%** en bloques procesados por el plan).
+* **Estrategia de Acceso y Explicación del Ordenamiento:**
+  * El planificador **no eliminó el paso de ordenamiento (`Sort`)**, sino que seleccionó una combinación sumamente eficiente: `Bitmap Index Scan` sobre `idx_movimiento_sucursal_producto_fecha` $\rightarrow$ `Bitmap Heap Scan` $\rightarrow$ `Sort (top-N heapsort)` $\rightarrow$ `Limit`.
+  * El índice reduce de forma inmediata el universo candidato de **120,000 registros a únicamente 150 registros** correspondientes al par `id_sucursal = 3 AND id_producto = 125` contenidos en solo 3 bloques físicos de tabla (`Heap Blocks: exact=3`).
+  * Con este subconjunto diminuto de 150 tuplas, el optimizador determina que ejecutar un ordenamiento en memoria mediante `top-N heapsort` (utilizando apenas 32 kB de memoria de trabajo) tiene un costo insignificante (costo total de 77.78 frente a 3,038.32 inicial).
+  * La presencia de `fecha DESC` en la definición del índice lo hace conceptualmente apto para este patrón de ordenamiento, logrando que la consulta culmine en menos de 0.1 milisegundos.
 
 ---
 
 #### 4.3 Consulta 3 — Ventas por Sucursal en Periodo Temporal (Octubre 2026)
 
-**Objetivo:** Consolidar el volumen de transacciones y facturación diaria en la Sucursal 3 durante el mes de Octubre de 2026.
+**Objetivo:** Consolidar el volumen de transacciones y facturación diaria en la Sucursal 3 durante el mes de Octubre de 2026 agrupado día por día.
 
 **Sentencia SQL:**
 ```sql
@@ -200,74 +204,63 @@ GROUP BY DATE(fecha)
 ORDER BY dia;
 ```
 
-**Resultado Funcional Resumido:**
+**Resultado Funcional:**
 * **Filas retornadas:** 31 registros (uno por cada día de Octubre de 2026).
-* **Muestra de resultados:**
-  * `2026-10-01` | 77 ventas | Total: $256,694.06
-  * `2026-10-02` | 83 ventas | Total: $272,797.15
-  * `2026-10-03` | 83 ventas | Total: $292,871.54
-  * `...`
-  * `2026-10-31` | 76 ventas | Total: $264,812.30
+* Facturación diaria promedio: entre \$237,000 y \$292,000 MXN por día (75 a 85 transacciones diarias).
 
 **Plan de Ejecución Real (`EXPLAIN (ANALYZE, BUFFERS)`):**
 ```text
-GroupAggregate  (cost=981.42..1004.14 rows=909 width=44) (actual time=1.236..1.523 rows=31 loops=1)
+GroupAggregate  (cost=976.72..998.87 rows=886 width=44) (actual time=1.356..1.640 rows=31 loops=1)
   Group Key: (date(fecha))
   Buffers: shared hit=308
-  ->  Sort  (cost=981.42..983.69 rows=909 width=10) (actual time=1.210..1.276 rows=2432 loops=1)
+  ->  Sort  (cost=976.72..978.93 rows=886 width=10) (actual time=1.330..1.398 rows=2432 loops=1)
         Sort Key: (date(fecha))
         Sort Method: quicksort  Memory: 173kB
         Buffers: shared hit=308
-        ->  Bitmap Heap Scan on venta  (cost=27.88..936.75 rows=909 width=10) (actual time=0.161..0.981 rows=2432 loops=1)
+        ->  Bitmap Heap Scan on venta  (cost=27.59..933.34 rows=886 width=10) (actual time=0.147..1.108 rows=2432 loops=1)
               Recheck Cond: ((id_sucursal = 3) AND (fecha >= '2026-10-01 00:00:00'::timestamp without time zone) AND (fecha < '2026-11-01 00:00:00'::timestamp without time zone))
               Heap Blocks: exact=293
               Buffers: shared hit=305
-              ->  Bitmap Index Scan on idx_venta_sucursal_fecha  (cost=0.00..27.65 rows=909 width=0) (actual time=0.132..0.132 rows=2432 loops=1)
+              ->  Bitmap Index Scan on idx_venta_sucursal_fecha  (cost=0.00..27.37 rows=886 width=0) (actual time=0.116..0.116 rows=2432 loops=1)
                     Index Cond: ((id_sucursal = 3) AND (fecha >= '2026-10-01 00:00:00'::timestamp without time zone) AND (fecha < '2026-11-01 00:00:00'::timestamp without time zone))
                     Buffers: shared hit=12
 Planning:
-  Buffers: shared hit=70
-Planning Time: 1.208 ms
-Execution Time: 1.571 ms
+  Buffers: shared hit=71
+Planning Time: 1.211 ms
+Execution Time: 1.686 ms
 ```
 
-**Métricas Clave:**
-* **Planning Time:** 1.208 ms
-* **Execution Time:** 1.571 ms
-* **Costo Estimado:** `981.42..1004.14` (reducido respecto a 1,747.84 inicial)
-* **Buffers Totales:** 308 shared hit (reducido desde 858)
-* **Tipo de Scan:** `Bitmap Index Scan` sobre `idx_venta_sucursal_fecha` + `Bitmap Heap Scan` + `GroupAggregate`.
-* **Uso del Índice:** Sí, el índice compuesto `(id_sucursal, fecha DESC)` aísla el rango temporal de la sucursal 3, leyendo únicamente 12 buffers del índice para identificar los 2,432 registros correspondientes.
+**Métricas y Análisis Técnico:**
+* **Planning Time:** 1.211 ms
+* **Execution Time:** **1.686 ms** (frente a 5.887 ms sin el índice, un factor de aceleración de **3.49x** y una reducción del tiempo de ejecución del **71.4%**).
+* **Buffers Compartidos Procesados:** **308 buffers** en caché compartida (`shared hit`), frente a 858 buffers del escaneo secuencial (una reducción del **64.1%** en bloques procesados por el plan).
+* **Justificación de Optimización:** El índice compuesto `(id_sucursal, fecha DESC)` permite un escaneo de índice por rango (*Range Scan*) acotado por la clave de sucursal y el intervalo de fechas. Lee solo 12 bloques del índice para identificar exactamente las 2,432 ventas del periodo, descartando a priori el 95% restante de transacciones de la tabla sin necesidad de leer sus registros.
 
 ---
 
-### 5. Comparativa Exhaustiva de Rendimiento (Antes vs. Después)
+### 5. Comparativa Integral de Rendimiento (Antes vs. Después)
 
-A continuación se presenta la comparativa formal con métricas reales obtenidas directamente de PostgreSQL en la misma máquina y con el mismo conjunto de datos (sin alterar parámetros del planificador):
-
-#### Comparación Integral: Las 3 Consultas
-
-| Métrica de Rendimiento | Consulta 1 (Stock Bajo) - Antes | Consulta 1 (Stock Bajo) - Después | Consulta 2 (Movimientos) - Antes | Consulta 2 (Movimientos) - Después | Consulta 3 (Ventas Mes) - Antes | Consulta 3 (Ventas Mes) - Después |
+| Métrica Técnica | Consulta 1 (Stock Bajo) - Antes | Consulta 1 (Stock Bajo) - Después | Consulta 2 (Kardex Movimientos) - Antes | Consulta 2 (Kardex Movimientos) - Después | Consulta 3 (Ventas Periodo) - Antes | Consulta 3 (Ventas Periodo) - Después |
 |---|---|---|---|---|---|---|
 | **Estrategia de Acceso** | Bitmap Scan (`pkey`) | **Bitmap Scan (`idx_parcial`)** | **Seq Scan (Tabla completa)** | **Bitmap Index Scan** | **Seq Scan (Tabla completa)** | **Bitmap Index Scan** |
 | **Índice Utilizado** | `inventario_pkey` | `idx_inventario_stock_bajo` | *Ninguno (Full Scan)* | `idx_movimiento_sucursal_producto_fecha` | *Ninguno (Full Scan)* | `idx_venta_sucursal_fecha` |
 | **Filas Inspeccionadas** | 5,000 en PK | **639 directas** | 120,000 filas | **150 directas** | 47,000 filas | **2,432 directas** |
 | **Filas Descartadas (Filter)** | 4,361 descartadas | **0 descartadas** | 119,850 descartadas | **0 descartadas** | 44,568 descartadas | **0 descartadas** |
-| **Buffers de Memoria (Hit)** | 399 | **388** | 1,241 | **9 (-99.27%)** | 858 | **308 (-64.10%)** |
-| **Costo del Plan (Total)** | 731.60 | **619.47** | 3,038.42 | **81.26 (-97.3%)** | 1,747.84 | **1,004.14 (-42.5%)** |
-| **Planning Time** | 3.172 ms | 3.016 ms | 0.987 ms | 1.460 ms | 1.011 ms | 1.208 ms |
-| **Execution Time** | 2.552 ms | **2.265 ms** | 8.351 ms | **0.099 ms (84x más rápida)** | 5.849 ms | **1.571 ms (3.7x más rápida)** |
+| **Accesos a Buffers (shared hit)** | 399 bloques | **388 bloques** | 1,241 bloques | **9 bloques** | 858 bloques | **308 bloques** |
+| **Reducción de Buffers Procesados** | — | **-2.8%** | — | **-99.27%** | — | **-64.10%** |
+| **Costo Total Estimado** | 737.44 | **619.97** | 3,038.36 | **77.78** | 1,746.08 | **998.87** |
+| **Planning Time** | 2.509 ms | 2.757 ms | 0.964 ms | 1.214 ms | 0.868 ms | 1.211 ms |
+| **Execution Time** | 2.366 ms | **1.900 ms** | 7.423 ms | **0.097 ms** | 5.887 ms | **1.686 ms** |
+| **Factor de Aceleración** | — | **1.25x** | — | **76.5x** | — | **3.49x** |
+| **Reducción de Tiempo de Ejecución** | — | **19.7%** | — | **98.7%** | — | **71.4%** |
 
-#### Profundización en Consulta 2 (Movimientos de Inventario)
-La Consulta 2 representa el caso más drástico de optimización:
-1. **Antes del índice:** PostgreSQL se veía obligado a ejecutar un `Seq Scan` recorriendo los 120,000 registros históricos de movimientos, consumiendo 1,241 buffers de memoria y descartando 119,850 filas por filtro para retener 150 y luego ordenarlas con heapsort. Tiempo: **8.351 ms**.
-2. **Con el índice compuesto:** El índice `(id_sucursal, id_producto, fecha DESC)` permitió filtrar en una única operación de árbol B-Tree tanto la sucursal como el producto. Solo se leyeron 3 bloques de índice y 3 bloques de tabla (9 buffers totales), extrayendo directamente las filas deseadas. Tiempo: **0.099 ms**, alcanzando una ganancia de velocidad de **8,400%**.
+*(Nota técnica: Todas las métricas de búferes corresponden a `shared hit`, es decir, bloques leídos directamente desde la memoria caché compartida de PostgreSQL (`shared_buffers`), sin registrar lecturas físicas de disco `shared read` debido al precalentamiento adecuado de la memoria intermedia).*
 
 ---
 
 ### 6. Validación de Integridad Referencial y Restricciones
 
-Se ejecutaron pruebas controladas intentando forzar violaciones a las reglas del modelo. Todas fueron rechazadas por PostgreSQL:
+Se ejecutaron pruebas automatizadas controladas en `sql/08_integrity_tests.sql`, comprobando que PostgreSQL lance la excepción correspondiente ante intentos de violar las reglas del modelo:
 
 | Prueba | Operación Intentada | Restricción Involucrada | Código / Excepción PostgreSQL | Resultado |
 |---|---|---|---|---|
@@ -280,46 +273,27 @@ Se ejecutaron pruebas controladas intentando forzar violaciones a las reglas del
 
 ---
 
-### 7. Prueba Transaccional ACID (COMMIT y ROLLBACK)
+### 7. Comportamiento Transaccional ACID
 
-Se validó el soporte ACID transaccional mediante dos casos de prueba:
+Se implementó y verificó la seguridad transaccional en `sql/07_transactions.sql` con captura directa de identificadores y control estricto de concurrencia:
 
-#### Caso A: Transacción Exitosa (`COMMIT`)
-* **Flujo:** Venta en Sucursal 1 del Producto 10 por 2 unidades.
-  * Stock inicial verificado: **200 unidades**.
-  * `BEGIN;`
-  * Registro de venta en cabecera `venta` (`id_venta = 47001` / `47026`).
-  * Registro en `detalle_venta` (2 unidades x precio de venta).
-  * Actualización del total de la venta calculado por sumatoria.
-  * Descuento atómico en `inventario` (`existencia = existencia - 2`).
-  * Registro en `movimiento_inventario` tipo `SALIDA` con referencia transaccional.
-  * `COMMIT;`
-* **Resultado:** Stock final verificado: **198 unidades**. La integridad y persistencia de todos los cambios fueron garantizadas de forma atómica.
+#### Caso 1: Transacción Exitosa (`COMMIT`)
+* **Mecanismo:** Bloque PL/pgSQL transaccional seguro contra concurrencia.
+  * Captura de clave generada: `INSERT INTO venta (...) RETURNING id_venta INTO v_id_venta;`
+  * Todas las operaciones posteriores (`detalle_venta`, `inventario`, `movimiento_inventario`) utilizan exclusivamente `v_id_venta`.
+  * **No se utiliza `MAX(id_venta)`**, evitando condiciones de carrera (*race conditions*).
+  * Validación de stock: `UPDATE inventario ... WHERE ... AND existencia >= 2;`
+  * Verificación: `GET DIAGNOSTICS v_filas_actualizadas = ROW_COUNT; IF v_filas_actualizadas = 0 THEN RAISE EXCEPTION ...; END IF;`
+* **Resultado:** Stock inicial del Producto 10 en Sucursal 1: **200 unidades**. Stock final comprobado: **198 unidades**. Movimiento de `SALIDA` insertado con referencia unívoca `VENTA-EXITOSA-47001`.
 
-#### Caso B: Transacción Abortada (`ROLLBACK`)
-* **Flujo:** Simulación de fallo (rechazo de pago con tarjeta).
-  * Conteo de ventas previo: **47,002 ventas**.
-  * `BEGIN;`
-  * Intento de registro en `venta` con método `TARJETA_RECHAZADA`.
-  * Inserción tentativa en `detalle_venta`.
-  * Intento de descuento en inventario.
-  * Evento de error simulado -> Emisión de `ROLLBACK;`.
-* **Resultado:** Conteo de ventas posterior: **47,002 ventas**. Búsqueda de registros con método `TARJETA_RECHAZADA`: **0 filas encontradas**. El estado de la base de datos permaneció completamente inalterado.
+#### Caso 2: Transacción Abortada por Regla de Negocio (Stock Insuficiente)
+* **Escenario:** Intento de venta de 50,000 unidades del Producto 10 (disponibilidad actual: 198).
+* **Mecanismo:** El `UPDATE inventario` con filtro `existencia >= 50000` afecta 0 filas. El bloque detecta `v_filas_actualizadas = 0` y dispara:
+  ```text
+  RAISE EXCEPTION 'Stock insuficiente para vender 50000 unidades del Producto 10'
+  ```
+* **Resultado:** La transacción se revierte de forma automática (`ROLLBACK`). El stock permanece inalterado en **198 unidades** y no se genera ningún movimiento de salida ni tupla huérfana en `venta`.
 
----
-
-### 8. Incidencias Técnicas Registradas y Soluciones Aplicadas
-
-1. **Aislamiento de sockets en sandbox Windows:**
-   * *Incidencia:* La conexión por red local (`127.0.0.1:5432`) desde procesos de consola independientes al servidor requería privilegios fuera del sandbox de red.
-   * *Solución:* Se ejecutó el servidor como proceso daemon y se configuraron las conexiones en modo local transparente con autenticación `trust` para entorno de desarrollo controlado.
-2. **Colisión de descriptores en registro de logs (`server.log`):**
-   * *Incidencia:* El uso del flag `-l` de `pg_ctl` en Windows provocó un error de violación de recursos compartidos (`sharing violation`) debido al bloqueo de archivos del sistema operativo.
-   * *Solución:* Se activó el recolector nativo en `postgresql.conf` (`logging_collector = on`, `log_directory = 'log'`), desacoplando el subproceso del motor de cualquier bloqueo de consola.
-3. **Cálculo de intervalos temporales en generación sintética:**
-   * *Incidencia:* La concatenación de cadenas `((random() * 35) || ' days')::interval` generó en casos de flotantes muy pequeños notación científica (`2.48e-05 days`), rechazada por el parser de PostgreSQL.
-   * *Solución:* Se migró a multiplicación de escalares de intervalos: `(INTERVAL '1 day' * (random() * 35))`, la cual es nativa, tipada y matemáticamente exacta.
-4. **Coherencia matemática en subtotales de prueba:**
-   * *Incidencia:* La evaluación reiterada de `random()` en la misma sentencia generó discrepancias entre la cantidad guardada y el subtotal calculado.
-   * *Solución:* Se refactorizó la carga de renglones de venta y compra mediante CTEs (`WITH base_det AS (...)`), garantizando que la cantidad se evaluara una única vez por renglón y el subtotal fuera `cantidad * precio_unitario`.
-
+#### Caso 3: Transacción Abortada Manualmente (`ROLLBACK`)
+* **Escenario:** Fallo simulado en terminal bancaria tras registrar una venta con método `TARJETA_RECHAZADA`.
+* **Resultado:** Conteo de ventas previo: **47,001**. Conteo posterior al `ROLLBACK`: **47,001**. Total de ventas con método rechazado: **0 tuplas**. Consistencia total en el estado de la base de datos.

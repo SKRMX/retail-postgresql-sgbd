@@ -1,44 +1,44 @@
 ﻿SET
-psql.exe : psql:c:/Users/USER/Desktop/retail-postgresql-sgbd/sql/08_integrity_tests.sql:17: NOTICE:  
+psql.exe : psql:C:/Users/USER/Desktop/retail-postgresql-sgbd/sql/08_integrity_tests.sql:17: NOTICE:  
 =====================================================
-En línea: 1 Carácter: 122
-+ ... } catch {}; & "c:\Users\USER\Desktop\retail-postgresql-sgbd\pgsql\bin ...
-+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : NotSpecified: (psql:c:/Users/U...===============:String) [], RemoteException
+En C:\Users\USER\Desktop\retail-postgresql-sgbd\scripts\run_all_and_capture.ps1: 79 Carácter: 1
++ & $psqlExe -h 127.0.0.1 -p 5432 -U postgres -d retail_inventory_db -f ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (psql:C:/Users/U...===============:String) [], RemoteException
     + FullyQualifiedErrorId : NativeCommandError
  
-psql:c:/Users/USER/Desktop/retail-postgresql-sgbd/sql/08_integrity_tests.sql:17: NOTICE:  INICIANDO PRUEBAS DE 
+psql:C:/Users/USER/Desktop/retail-postgresql-sgbd/sql/08_integrity_tests.sql:17: NOTICE:  INICIANDO PRUEBAS DE 
 INTEGRIDAD Y RESTRICCIONES EN BD
-psql:c:/Users/USER/Desktop/retail-postgresql-sgbd/sql/08_integrity_tests.sql:17: NOTICE:  
+psql:C:/Users/USER/Desktop/retail-postgresql-sgbd/sql/08_integrity_tests.sql:17: NOTICE:  
 =====================================================
 DO
-psql:c:/Users/USER/Desktop/retail-postgresql-sgbd/sql/08_integrity_tests.sql:32: NOTICE:  [ÉXITO] Prueba 1 - 
+psql:C:/Users/USER/Desktop/retail-postgresql-sgbd/sql/08_integrity_tests.sql:32: NOTICE:  [ÉXITO] Prueba 1 - 
 Restricción UNIQUE de SKU funcionó correctamente: duplicate key value violates unique constraint "producto_sku_key"
 DO
-psql:c:/Users/USER/Desktop/retail-postgresql-sgbd/sql/08_integrity_tests.sql:47: NOTICE:  [ÉXITO] Prueba 2 - 
+psql:C:/Users/USER/Desktop/retail-postgresql-sgbd/sql/08_integrity_tests.sql:47: NOTICE:  [ÉXITO] Prueba 2 - 
 Restricción FOREIGN KEY de categoría funcionó correctamente: insert or update on table "producto" violates foreign key 
 constraint "producto_id_categoria_fkey"
 DO
-psql:c:/Users/USER/Desktop/retail-postgresql-sgbd/sql/08_integrity_tests.sql:63: NOTICE:  [ÉXITO] Prueba 3 - 
+psql:C:/Users/USER/Desktop/retail-postgresql-sgbd/sql/08_integrity_tests.sql:63: NOTICE:  [ÉXITO] Prueba 3 - 
 Restricción CHECK de existencia >= 0 funcionó correctamente: new row for relation "inventario" violates check 
 constraint "inventario_existencia_check"
 DO
-psql:c:/Users/USER/Desktop/retail-postgresql-sgbd/sql/08_integrity_tests.sql:78: NOTICE:  [ÉXITO] Prueba 4 - 
+psql:C:/Users/USER/Desktop/retail-postgresql-sgbd/sql/08_integrity_tests.sql:78: NOTICE:  [ÉXITO] Prueba 4 - 
 Restricción CHECK de cantidad > 0 funcionó correctamente: new row for relation "detalle_venta" violates check 
 constraint "detalle_venta_cantidad_check"
 DO
-psql:c:/Users/USER/Desktop/retail-postgresql-sgbd/sql/08_integrity_tests.sql:92: NOTICE:  [ÉXITO] Prueba 5 - 
+psql:C:/Users/USER/Desktop/retail-postgresql-sgbd/sql/08_integrity_tests.sql:92: NOTICE:  [ÉXITO] Prueba 5 - 
 Integridad referencial ON DELETE RESTRICT funcionó correctamente: update or delete on table "categoria" violates 
 foreign key constraint "producto_id_categoria_fkey" on table "producto"
 DO
-psql:c:/Users/USER/Desktop/retail-postgresql-sgbd/sql/08_integrity_tests.sql:107: NOTICE:  [ÉXITO] Prueba 6 - 
+psql:C:/Users/USER/Desktop/retail-postgresql-sgbd/sql/08_integrity_tests.sql:107: NOTICE:  [ÉXITO] Prueba 6 - 
 Restricción CHECK de margen de precios funcionó correctamente: new row for relation "producto" violates check 
 constraint "chk_producto_precios_coherentes"
 DO
-psql:c:/Users/USER/Desktop/retail-postgresql-sgbd/sql/08_integrity_tests.sql:114: NOTICE:  
+psql:C:/Users/USER/Desktop/retail-postgresql-sgbd/sql/08_integrity_tests.sql:114: NOTICE:  
 =====================================================
-psql:c:/Users/USER/Desktop/retail-postgresql-sgbd/sql/08_integrity_tests.sql:114: NOTICE:  TODAS LAS PRUEBAS DE 
+psql:C:/Users/USER/Desktop/retail-postgresql-sgbd/sql/08_integrity_tests.sql:114: NOTICE:  TODAS LAS PRUEBAS DE 
 INTEGRIDAD FUERON SUPERADAS (100%%)
-psql:c:/Users/USER/Desktop/retail-postgresql-sgbd/sql/08_integrity_tests.sql:114: NOTICE:  
+psql:C:/Users/USER/Desktop/retail-postgresql-sgbd/sql/08_integrity_tests.sql:114: NOTICE:  
 =====================================================
 DO

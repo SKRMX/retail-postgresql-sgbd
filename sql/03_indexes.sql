@@ -25,10 +25,13 @@ WHERE existencia <= stock_minimo;
 -- ÍNDICE PARA CONSULTA 2: Historial Cronológico de Movimientos de un Producto
 -- Tipo: Índice B-Tree Compuesto con Orden Descendente
 -- Razón técnica:
--- Cubre los predicados de igualdad (id_sucursal, id_producto) y proporciona
--- el orden cronológico pre-clasificado (fecha DESC). Esto permite al planificador
--- evitar un Sort completo de miles de movimientos en memoria/disco y detenerse
--- de inmediato al alcanzar el LIMIT 50 requerido.
+-- Cubre los predicados de igualdad (id_sucursal, id_producto) y reduce
+-- drásticamente el conjunto candidato de 120,000 filas a solo 150 filas mediante
+-- un Bitmap Index Scan altamente selectivo. Posteriormente, el motor ejecuta
+-- un top-N heapsort mínimo en memoria compartida (32 kB) para obtener las 50
+-- filas más recientes requeridas por el LIMIT 50. La presencia de fecha DESC
+-- hace que el índice sea conceptualmente idóneo para este patrón, permitiendo
+-- un acceso ultrarrápido y focalizado.
 -- -----------------------------------------------------------------------------
 DROP INDEX IF EXISTS idx_movimiento_sucursal_producto_fecha;
 CREATE INDEX idx_movimiento_sucursal_producto_fecha

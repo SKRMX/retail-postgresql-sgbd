@@ -3,15 +3,17 @@
 -- BASE DE DATOS: retail_inventory_db
 -- ARCHIVO: 07_transactions.sql
 -- DESCRIPCIÓN: Demostración de transacciones ACID en PostgreSQL:
---              1. Transacción exitosa (BEGIN ... COMMIT): Venta, detalle,
---                 actualización de stock y movimiento histórico.
---              2. Transacción abortada (BEGIN ... ROLLBACK): Simulación de falla
---                 (e.g., fondos insuficientes o interrupción) comprobando que
---                 no persisten cambios parciales.
+--              1. Transacción exitosa (COMMIT) con captura segura de clave
+--                 mediante RETURNING id_venta INTO v_id_venta (sin MAX) y
+--                 validación estricta de stock disponible.
+--              2. Transacción abortada por regla de negocio (Stock insuficiente).
+--              3. Transacción abortada manualmente mediante ROLLBACK (Fallo simulado).
 -- =============================================================================
 
+SET client_min_messages = notice;
+
 -- =============================================================================
--- CASO 1: TRANSACCIÓN EXITOSA DE VENTA (COMMIT)
+-- CASO 1: TRANSACCIÓN EXITOSA DE VENTA (COMMIT SEGURO PARA CONCURRENCIA)
 -- =============================================================================
 -- Escenario: La Sucursal 1 vende 2 unidades del Producto 10.
 -- 1. Verificamos el stock antes de la transacción
@@ -19,109 +21,141 @@ SELECT id_sucursal, id_producto, existencia
 FROM inventario
 WHERE id_sucursal = 1 AND id_producto = 10;
 
-BEGIN;
+DO $$
+DECLARE
+    v_id_venta BIGINT;
+    v_precio_unitario NUMERIC(12, 2);
+    v_subtotal NUMERIC(14, 2);
+    v_filas_actualizadas INT;
+BEGIN
+    -- Paso 1: Consultar precio de venta del producto
+    SELECT precio_venta INTO v_precio_unitario
+    FROM producto
+    WHERE id_producto = 10;
 
--- Paso 1: Registrar cabecera de la venta
-INSERT INTO venta (id_sucursal, fecha, total, metodo_pago)
-VALUES (1, CURRENT_TIMESTAMP, 0.00, 'TARJETA_CREDITO')
-RETURNING id_venta;
--- Supongamos que el ID generado o capturado se maneja en la sesión
+    v_subtotal := ROUND((2 * v_precio_unitario)::numeric, 2);
 
--- Paso 2: Obtener el precio y registrar el detalle de la venta (ej. para la venta más reciente de la sucursal)
-WITH nueva_venta AS (
-    SELECT id_venta
-    FROM venta
+    -- Paso 2: Insertar venta y capturar id_venta directamente (seguro en concurrencia)
+    INSERT INTO venta (id_sucursal, fecha, total, metodo_pago)
+    VALUES (1, CURRENT_TIMESTAMP, v_subtotal, 'TARJETA_CREDITO')
+    RETURNING id_venta INTO v_id_venta;
+
+    -- Paso 3: Insertar detalle utilizando exclusivamente v_id_venta (sin MAX)
+    INSERT INTO detalle_venta (id_venta, id_producto, cantidad, precio_unitario, subtotal)
+    VALUES (v_id_venta, 10, 2, v_precio_unitario, v_subtotal);
+
+    -- Paso 4: Descontar stock verificando disponibilidad suficiente (existencia >= 2)
+    UPDATE inventario
+    SET existencia = existencia - 2,
+        updated_at = CURRENT_TIMESTAMP
     WHERE id_sucursal = 1
-    ORDER BY id_venta DESC
-    LIMIT 1
-)
-INSERT INTO detalle_venta (id_venta, id_producto, cantidad, precio_unitario, subtotal)
-SELECT
-    nv.id_venta,
-    10 AS id_producto,
-    2 AS cantidad,
-    p.precio_venta,
-    ROUND((2 * p.precio_venta)::numeric, 2) AS subtotal
-FROM nueva_venta nv
-JOIN producto p ON p.id_producto = 10;
+      AND id_producto = 10
+      AND existencia >= 2;
 
--- Paso 3: Actualizar el total de la venta en la cabecera
-WITH nueva_venta AS (
-    SELECT id_venta
-    FROM venta
-    WHERE id_sucursal = 1
-    ORDER BY id_venta DESC
-    LIMIT 1
-),
-suma_detalles AS (
-    SELECT SUM(subtotal) AS total_calculado
-    FROM detalle_venta
-    WHERE id_venta = (SELECT id_venta FROM nueva_venta)
-)
-UPDATE venta
-SET total = (SELECT total_calculado FROM suma_detalles)
-WHERE id_venta = (SELECT id_venta FROM nueva_venta);
+    -- Validar que se haya actualizado exactamente una fila
+    GET DIAGNOSTICS v_filas_actualizadas = ROW_COUNT;
+    IF v_filas_actualizadas = 0 THEN
+        RAISE EXCEPTION 'Stock insuficiente para el Producto 10 en Sucursal 1';
+    END IF;
 
--- Paso 4: Descontar stock en inventario (asegurando existencia suficiente >= 2)
-UPDATE inventario
-SET existencia = existencia - 2,
-    updated_at = CURRENT_TIMESTAMP
-WHERE id_sucursal = 1
-  AND id_producto = 10
-  AND existencia >= 2;
+    -- Paso 5: Registrar trazabilidad histórica solo tras validar stock
+    INSERT INTO movimiento_inventario (id_sucursal, id_producto, tipo, cantidad, fecha, referencia)
+    VALUES (1, 10, 'SALIDA', 2, CURRENT_TIMESTAMP, 'VENTA-EXITOSA-' || v_id_venta::text);
 
--- Paso 5: Registrar la trazabilidad del movimiento de SALIDA
-INSERT INTO movimiento_inventario (id_sucursal, id_producto, tipo, cantidad, fecha, referencia)
-VALUES (
-    1,
-    10,
-    'SALIDA',
-    2,
-    CURRENT_TIMESTAMP,
-    'VENTA-TRANSACCIONAL-EXITOSA-' || (SELECT MAX(id_venta) FROM venta WHERE id_sucursal = 1)
-);
+    RAISE NOTICE '[ÉXITO COMMIT] Venta % confirmada. Stock descontado. Total: $%', v_id_venta, v_subtotal;
+END $$;
 
--- Confirmar todas las operaciones de forma atómica
-COMMIT;
-
--- Verificación posterior al COMMIT: El stock disminuyó exactamente 2 unidades
+-- Verificación posterior: El stock disminuyó exactamente 2 unidades
 SELECT id_sucursal, id_producto, existencia
 FROM inventario
 WHERE id_sucursal = 1 AND id_producto = 10;
 
 
 -- =============================================================================
--- CASO 2: TRANSACCIÓN ABORTADA POR ERROR O CONDICIÓN CONTROLADA (ROLLBACK)
+-- CASO 2: TRANSACCIÓN ABORTADA POR STOCK INSUFICIENTE (PROTECCIÓN DE INTEGRIDAD)
 -- =============================================================================
--- Escenario: Se inicia una venta, se registra la cabecera y el detalle, pero se
--- detecta una anomalía (ej. fallo en terminal bancaria o stock insuficiente).
--- Se emite ROLLBACK y se demuestra que el estado de la base de datos queda intacto.
+-- Escenario: Se intenta vender una cantidad excesiva (50,000 unidades) del Producto 10.
+-- La validación detecta que no hay stock, aborta la transacción y revierte todo cambio.
 
--- 1. Capturar el total de ventas antes de la prueba
-SELECT COUNT(*) AS total_ventas_antes FROM venta;
+SELECT existencia AS stock_antes_intento_invalido
+FROM inventario
+WHERE id_sucursal = 1 AND id_producto = 10;
+
+DO $$
+DECLARE
+    v_id_venta BIGINT;
+    v_precio_unitario NUMERIC(12, 2);
+    v_subtotal NUMERIC(14, 2);
+    v_filas_actualizadas INT;
+    v_cantidad_solicitada INT := 50000; -- Cantidad que supera la existencia
+BEGIN
+    SELECT precio_venta INTO v_precio_unitario
+    FROM producto
+    WHERE id_producto = 10;
+
+    v_subtotal := ROUND((v_cantidad_solicitada * v_precio_unitario)::numeric, 2);
+
+    -- Se intenta crear la venta
+    INSERT INTO venta (id_sucursal, fecha, total, metodo_pago)
+    VALUES (1, CURRENT_TIMESTAMP, v_subtotal, 'EFECTIVO')
+    RETURNING id_venta INTO v_id_venta;
+
+    INSERT INTO detalle_venta (id_venta, id_producto, cantidad, precio_unitario, subtotal)
+    VALUES (v_id_venta, 10, v_cantidad_solicitada, v_precio_unitario, v_subtotal);
+
+    -- Intento de descuento con condición de existencia suficiente
+    UPDATE inventario
+    SET existencia = existencia - v_cantidad_solicitada,
+        updated_at = CURRENT_TIMESTAMP
+    WHERE id_sucursal = 1
+      AND id_producto = 10
+      AND existencia >= v_cantidad_solicitada;
+
+    GET DIAGNOSTICS v_filas_actualizadas = ROW_COUNT;
+    IF v_filas_actualizadas = 0 THEN
+        RAISE EXCEPTION 'Stock insuficiente para vender % unidades del Producto 10', v_cantidad_solicitada;
+    END IF;
+
+    -- Este paso NO llegará a ejecutarse
+    INSERT INTO movimiento_inventario (id_sucursal, id_producto, tipo, cantidad, fecha, referencia)
+    VALUES (1, 10, 'SALIDA', v_cantidad_solicitada, CURRENT_TIMESTAMP, 'VENTA-FALLIDA-' || v_id_venta::text);
+
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE NOTICE '[ABORTADO POR STOCK] Transacción revertida correctamente: %', SQLERRM;
+END $$;
+
+-- Verificación posterior: El stock permanece exactamente igual que antes del intento
+SELECT existencia AS stock_despues_intento_invalido
+FROM inventario
+WHERE id_sucursal = 1 AND id_producto = 10;
+
+
+-- =============================================================================
+-- CASO 3: TRANSACCIÓN ABORTADA EXPLÍCITAMENTE (ROLLBACK)
+-- =============================================================================
+-- Escenario: Simulación de fallo en pasarela de pagos durante un flujo SQL interactivo.
+-- Se demuestra que un ROLLBACK manual no deja tuplas huérfanas ni modifica el stock.
+
+SELECT COUNT(*) AS total_ventas_antes_rollback FROM venta;
 
 BEGIN;
 
--- Registrar venta preliminar
+-- Se inserta venta provisional
 INSERT INTO venta (id_sucursal, fecha, total, metodo_pago)
 VALUES (2, CURRENT_TIMESTAMP, 1500.00, 'TARJETA_RECHAZADA');
-
--- Insertar detalle
-INSERT INTO detalle_venta (id_venta, id_producto, cantidad, precio_unitario, subtotal)
-VALUES ((SELECT MAX(id_venta) FROM venta), 20, 1, 1500.00, 1500.00);
 
 -- Descuento tentativo de inventario
 UPDATE inventario
 SET existencia = existencia - 1
 WHERE id_sucursal = 2 AND id_producto = 20;
 
--- Se produce una excepción / rechazo del pago -> Deshacer completamente
+-- Simulación de evento de rechazo bancario -> Emisión de ROLLBACK
 ROLLBACK;
 
--- Verificación posterior al ROLLBACK: La venta y el detalle NO existen y el stock no cambió
-SELECT COUNT(*) AS total_ventas_despues FROM venta;
+-- Verificación: Las ventas se mantienen sin cambios y no existe el método rechazado
+SELECT COUNT(*) AS total_ventas_despues_rollback FROM venta;
 
-SELECT *
+SELECT COUNT(*) AS ventas_con_metodo_rechazado
 FROM venta
 WHERE metodo_pago = 'TARJETA_RECHAZADA';
-

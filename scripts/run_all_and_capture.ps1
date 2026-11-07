@@ -1,4 +1,4 @@
-# =============================================================================
+﻿# =============================================================================
 # PROYECTO: retail-postgresql-sgbd
 # ARCHIVO: run_all_and_capture.ps1
 # DESCRIPCIÓN: Script de ejecución completa y captura de evidencia técnica real.
@@ -35,15 +35,12 @@ if (Test-Path (Join-Path $dataDir "postmaster.pid")) {
     Start-Sleep -Seconds 2
 }
 
-# 2. Crear base de datos si no existe
-Write-Host "--- 2. Creando base de datos retail_inventory_db ---" -ForegroundColor Cyan
-& $psqlExe -h 127.0.0.1 -p 5432 -U postgres -d postgres -t -c "SELECT 1 FROM pg_database WHERE datname = 'retail_inventory_db';" | Out-String -OutVariable dbExists
-if ($dbExists.Trim() -ne "1") {
-    & $createdbExe -h 127.0.0.1 -p 5432 -U postgres retail_inventory_db
-    Write-Host "Base de datos creada exitosamente." -ForegroundColor Green
-} else {
-    Write-Host "Base de datos retail_inventory_db ya existía." -ForegroundColor Yellow
-}
+# 2. Reconstruir base de datos retail_inventory_db desde cero
+Write-Host "--- 2. Reconstruyendo base de datos retail_inventory_db desde cero ---" -ForegroundColor Cyan
+& $psqlExe -h 127.0.0.1 -p 5432 -U postgres -d postgres -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'retail_inventory_db' AND pid <> pg_backend_pid();"
+& $psqlExe -h 127.0.0.1 -p 5432 -U postgres -d postgres -c "DROP DATABASE IF EXISTS retail_inventory_db;"
+& $psqlExe -h 127.0.0.1 -p 5432 -U postgres -d postgres -c "CREATE DATABASE retail_inventory_db;"
+Write-Host "Base de datos retail_inventory_db creada limpiamente desde cero." -ForegroundColor Green
 
 # 3. Ejecutar 01_schema.sql
 Write-Host "--- 3. Ejecutando 01_schema.sql ---" -ForegroundColor Cyan

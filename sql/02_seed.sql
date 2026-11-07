@@ -147,7 +147,7 @@ SELECT
 FROM generate_series(1, 119850) AS i;
 
 -- B) Asegurar registros específicos para Sucursal 3 y Producto 125 (Consulta Optimizada 2)
--- Para evaluar eficazmente el ordenamiento, índice compuesto y LIMIT 50
+-- Para evaluar eficazmente el ordenamiento, índice compuesto y LIMIT 50 dentro del año 2026
 INSERT INTO movimiento_inventario (id_sucursal, id_producto, tipo, cantidad, fecha, referencia)
 SELECT
     3 AS id_sucursal,
@@ -158,7 +158,7 @@ SELECT
         ELSE 'AJUSTE'
     END AS tipo,
     (FLOOR(random() * 20) + 1)::int AS cantidad,
-    TIMESTAMP '2026-06-01 09:00:00' + (INTERVAL '1 day' * (i * 1.5))
+    TIMESTAMP '2026-01-05 08:30:00' + (INTERVAL '1 day' * (i * 2.0))
                                    + (INTERVAL '1 second' * (random() * 3600)) AS fecha,
     'MOV-SUC3-P125-' || LPAD(i::text, 4, '0') AS referencia
 FROM generate_series(1, 150) AS i;

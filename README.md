@@ -18,7 +18,9 @@ Proyecto independiente para la implementación física, validación de integrida
 ## 2. Requisitos y Entorno
 
 * **Sistema Operativo:** Windows 10/11 (o Linux/macOS)
-* **Motor SGBD:** PostgreSQL 17 (incluido como versión portátil en el proyecto o ejecutable vía Docker)
+* **Motor SGBD:** PostgreSQL 17
+  * *Entorno local de pruebas:* PostgreSQL 17.2 portátil ubicado en `./pgsql/` (excluido de Git mediante `.gitignore` para no subir binarios pesados al repositorio).
+  * *Entorno reproducible para terceros:* Contenedor Docker Compose con `postgres:17-alpine` y pgAdmin 4, o cualquier instalación existente de PostgreSQL 17.
 * **Herramienta Visual:** pgAdmin 4 (local o mediante contenedor web)
 * **Shell de Automatización:** PowerShell 7 / Windows PowerShell o Bash
 
@@ -67,37 +69,17 @@ retail-postgresql-sgbd/
 │   └── 08_integrity_tests_output.txt
 │
 └── reports/
-    ├── technical_report.md         # Informe técnico detallado con métricas reales
-    └── documento_academico.md      # Reporte académico formal con modelo ERD y análisis formal
+    └── technical_report.md         # Informe técnico detallado con métricas reales
 ```
 
 ---
 
 ## 4. Opciones para Levantar PostgreSQL
 
-Se proporcionan dos alternativas independientes:
+Se proporcionan las siguientes opciones según el entorno disponible:
 
-### Opción A: Instancia Local Portátil (Recomendada y ya pre-configurada)
-El proyecto contiene la suite oficial de binarios de PostgreSQL 17 en `./pgsql/bin/`. No requiere privilegios de administrador ni altera variables de entorno del sistema.
-
-1. **Iniciar el servidor:**
-   ```powershell
-   powershell -ExecutionPolicy Bypass -File .\scripts\start_postgres.ps1
-   ```
-2. **Detener el servidor cuando sea necesario:**
-   ```powershell
-   powershell -ExecutionPolicy Bypass -File .\scripts\stop_postgres.ps1
-   ```
-* **Host:** `localhost` o `127.0.0.1`
-* **Puerto:** `5432`
-* **Usuario:** `postgres`
-* **Contraseña:** *(No requerida bajo modo trust local)*
-* **Base de datos:** `retail_inventory_db`
-
----
-
-### Opción B: Mediante Docker Compose (PostgreSQL 17 + pgAdmin 4)
-Si se prefiere una ejecución 100% en contenedores aislados:
+### Opción A: Entorno Reproducible con Docker Compose (Recomendada para terceros)
+Levanta de forma automática un contenedor con PostgreSQL 17 y pgAdmin 4 sin requerir instalaciones previas en el sistema host:
 
 1. **Iniciar los servicios:**
    ```bash
@@ -113,6 +95,31 @@ Si se prefiere una ejecución 100% en contenedores aislados:
    * Base de datos: `retail_inventory_db`
    * Usuario: `retail_user`
    * Contraseña de desarrollo: `retail_dev_password_123`
+
+---
+
+### Opción B: Entorno Local Portátil (Utilizado durante el desarrollo)
+Para el desarrollo y pruebas locales se utilizó una instancia portátil oficial de PostgreSQL 17.2 ubicada en la carpeta `./pgsql/` (la cual **no está versionada en el repositorio** por buenas prácticas de tamaño):
+
+1. **Iniciar el servidor local portátil:**
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File .\scripts\start_postgres.ps1
+   ```
+2. **Detener el servidor cuando sea necesario:**
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File .\scripts\stop_postgres.ps1
+   ```
+* **Host:** `localhost` o `127.0.0.1`
+* **Puerto:** `5432`
+* **Usuario:** `postgres`
+* **Base de datos:** `retail_inventory_db`
+
+---
+
+### Opción C: Instalación Existente de PostgreSQL 17
+Si ya cuentas con PostgreSQL 17 instalado en tu sistema operativo:
+1. Asegúrate de que el servicio esté en ejecución en el puerto `5432`.
+2. Ejecuta los scripts mediante el cliente estándar `psql`.
 
 ---
 
@@ -191,7 +198,7 @@ Para generar las capturas académicas solicitadas, sigue estos pasos:
 | **7** | **Consulta 1 + Resultado** | Abrir **Query Tool** (icono de rayo o *Tools* -> *Query Tool*). Copiar y ejecutar la Consulta 1 de `sql/04_queries.sql`. Capturar la cuadrícula inferior *Data Output* (muestra los 639 productos en stock bajo). |
 | **8** | **EXPLAIN ANALYZE 1** | En el Query Tool, ejecutar la Consulta 1 precedida de `EXPLAIN (ANALYZE, BUFFERS)` o pulsar el botón **Explain Analyze** (icono de cronómetro/árbol). Seleccionar la pestaña **Explain** para ver el diagrama de bloques visual del plan o **Data Output** para ver el texto con `idx_inventario_stock_bajo`. |
 | **9** | **Consulta 2 + Resultado** | Pegar la Consulta 2 de `sql/04_queries.sql` (`LIMIT 50`). Ejecutar y capturar la cuadrícula con las 50 tuplas ordenadas cronológicamente. |
-| **10** | **EXPLAIN ANALYZE 2** | Ejecutar con `EXPLAIN (ANALYZE, BUFFERS)`. Se observa el `Bitmap Index Scan` sobre `idx_movimiento_sucursal_producto_fecha` con tiempo inferior a 0.1 ms y solo 9 buffers. |
+| **10** | **EXPLAIN ANALYZE 2** | Ejecutar con `EXPLAIN (ANALYZE, BUFFERS)`. Se observa el `Bitmap Index Scan` sobre `idx_movimiento_sucursal_producto_fecha`, reduciendo el espacio de búsqueda de 120,000 filas a solo 150 filas, seguido de un `top-N heapsort` mínimo (32 kB) para devolver el `LIMIT 50` con solo 9 accesos a buffers compartidos y tiempo inferior a 0.1 ms. |
 | **11** | **Consulta 3 + Resultado** | Pegar la Consulta 3 de `sql/04_queries.sql` (Ventas de Octubre 2026 en Sucursal 3). Ejecutar y capturar las 31 filas agrupadas por día. |
 | **12** | **EXPLAIN ANALYZE 3** | Ejecutar con `EXPLAIN (ANALYZE, BUFFERS)`. Se aprecia el `Bitmap Index Scan` sobre `idx_venta_sucursal_fecha` aislando eficientemente el rango temporal de la sucursal. |
 

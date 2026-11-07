@@ -30,99 +30,99 @@
 
       table_name       |              constraint_name              | constraint_type 
 -----------------------+-------------------------------------------+-----------------
- categoria             | 2200_49153_1_not_null                     | CHECK
- categoria             | 2200_49153_2_not_null                     | CHECK
+ categoria             | 2200_57541_1_not_null                     | CHECK
+ categoria             | 2200_57541_2_not_null                     | CHECK
  categoria             | categoria_pkey                            | PRIMARY KEY
  categoria             | categoria_nombre_key                      | UNIQUE
- compra                | 2200_49289_1_not_null                     | CHECK
- compra                | 2200_49289_2_not_null                     | CHECK
- compra                | 2200_49289_3_not_null                     | CHECK
- compra                | 2200_49289_4_not_null                     | CHECK
- compra                | 2200_49289_5_not_null                     | CHECK
- compra                | 2200_49289_6_not_null                     | CHECK
+ compra                | 2200_57677_1_not_null                     | CHECK
+ compra                | 2200_57677_2_not_null                     | CHECK
+ compra                | 2200_57677_3_not_null                     | CHECK
+ compra                | 2200_57677_4_not_null                     | CHECK
+ compra                | 2200_57677_5_not_null                     | CHECK
+ compra                | 2200_57677_6_not_null                     | CHECK
  compra                | compra_estado_check                       | CHECK
  compra                | compra_total_check                        | CHECK
  compra                | compra_id_proveedor_fkey                  | FOREIGN KEY
  compra                | compra_id_sucursal_fkey                   | FOREIGN KEY
  compra                | compra_pkey                               | PRIMARY KEY
- detalle_compra        | 2200_49309_1_not_null                     | CHECK
- detalle_compra        | 2200_49309_2_not_null                     | CHECK
- detalle_compra        | 2200_49309_3_not_null                     | CHECK
- detalle_compra        | 2200_49309_4_not_null                     | CHECK
- detalle_compra        | 2200_49309_5_not_null                     | CHECK
- detalle_compra        | 2200_49309_6_not_null                     | CHECK
+ detalle_compra        | 2200_57697_1_not_null                     | CHECK
+ detalle_compra        | 2200_57697_2_not_null                     | CHECK
+ detalle_compra        | 2200_57697_3_not_null                     | CHECK
+ detalle_compra        | 2200_57697_4_not_null                     | CHECK
+ detalle_compra        | 2200_57697_5_not_null                     | CHECK
+ detalle_compra        | 2200_57697_6_not_null                     | CHECK
  detalle_compra        | detalle_compra_cantidad_check             | CHECK
  detalle_compra        | detalle_compra_costo_unitario_check       | CHECK
  detalle_compra        | detalle_compra_subtotal_check             | CHECK
  detalle_compra        | detalle_compra_id_compra_fkey             | FOREIGN KEY
  detalle_compra        | detalle_compra_id_producto_fkey           | FOREIGN KEY
  detalle_compra        | detalle_compra_pkey                       | PRIMARY KEY
- detalle_venta         | 2200_49269_1_not_null                     | CHECK
- detalle_venta         | 2200_49269_2_not_null                     | CHECK
- detalle_venta         | 2200_49269_3_not_null                     | CHECK
- detalle_venta         | 2200_49269_4_not_null                     | CHECK
- detalle_venta         | 2200_49269_5_not_null                     | CHECK
- detalle_venta         | 2200_49269_6_not_null                     | CHECK
+ detalle_venta         | 2200_57657_1_not_null                     | CHECK
+ detalle_venta         | 2200_57657_2_not_null                     | CHECK
+ detalle_venta         | 2200_57657_3_not_null                     | CHECK
+ detalle_venta         | 2200_57657_4_not_null                     | CHECK
+ detalle_venta         | 2200_57657_5_not_null                     | CHECK
+ detalle_venta         | 2200_57657_6_not_null                     | CHECK
  detalle_venta         | detalle_venta_cantidad_check              | CHECK
  detalle_venta         | detalle_venta_precio_unitario_check       | CHECK
  detalle_venta         | detalle_venta_subtotal_check              | CHECK
  detalle_venta         | detalle_venta_id_producto_fkey            | FOREIGN KEY
  detalle_venta         | detalle_venta_id_venta_fkey               | FOREIGN KEY
  detalle_venta         | detalle_venta_pkey                        | PRIMARY KEY
- inventario            | 2200_49214_1_not_null                     | CHECK
- inventario            | 2200_49214_2_not_null                     | CHECK
- inventario            | 2200_49214_3_not_null                     | CHECK
- inventario            | 2200_49214_4_not_null                     | CHECK
- inventario            | 2200_49214_5_not_null                     | CHECK
+ inventario            | 2200_57602_1_not_null                     | CHECK
+ inventario            | 2200_57602_2_not_null                     | CHECK
+ inventario            | 2200_57602_3_not_null                     | CHECK
+ inventario            | 2200_57602_4_not_null                     | CHECK
+ inventario            | 2200_57602_5_not_null                     | CHECK
  inventario            | inventario_existencia_check               | CHECK
  inventario            | inventario_stock_minimo_check             | CHECK
  inventario            | inventario_id_producto_fkey               | FOREIGN KEY
  inventario            | inventario_id_sucursal_fkey               | FOREIGN KEY
  inventario            | inventario_pkey                           | PRIMARY KEY
- movimiento_inventario | 2200_49235_1_not_null                     | CHECK
- movimiento_inventario | 2200_49235_2_not_null                     | CHECK
- movimiento_inventario | 2200_49235_3_not_null                     | CHECK
- movimiento_inventario | 2200_49235_4_not_null                     | CHECK
- movimiento_inventario | 2200_49235_5_not_null                     | CHECK
- movimiento_inventario | 2200_49235_6_not_null                     | CHECK
+ movimiento_inventario | 2200_57623_1_not_null                     | CHECK
+ movimiento_inventario | 2200_57623_2_not_null                     | CHECK
+ movimiento_inventario | 2200_57623_3_not_null                     | CHECK
+ movimiento_inventario | 2200_57623_4_not_null                     | CHECK
+ movimiento_inventario | 2200_57623_5_not_null                     | CHECK
+ movimiento_inventario | 2200_57623_6_not_null                     | CHECK
  movimiento_inventario | movimiento_inventario_cantidad_check      | CHECK
  movimiento_inventario | movimiento_inventario_tipo_check          | CHECK
  movimiento_inventario | movimiento_inventario_id_producto_fkey    | FOREIGN KEY
  movimiento_inventario | movimiento_inventario_id_sucursal_fkey    | FOREIGN KEY
  movimiento_inventario | movimiento_inventario_pkey                | PRIMARY KEY
- producto              | 2200_49164_1_not_null                     | CHECK
- producto              | 2200_49164_2_not_null                     | CHECK
- producto              | 2200_49164_3_not_null                     | CHECK
- producto              | 2200_49164_4_not_null                     | CHECK
- producto              | 2200_49164_5_not_null                     | CHECK
- producto              | 2200_49164_6_not_null                     | CHECK
- producto              | 2200_49164_7_not_null                     | CHECK
+ producto              | 2200_57552_1_not_null                     | CHECK
+ producto              | 2200_57552_2_not_null                     | CHECK
+ producto              | 2200_57552_3_not_null                     | CHECK
+ producto              | 2200_57552_4_not_null                     | CHECK
+ producto              | 2200_57552_5_not_null                     | CHECK
+ producto              | 2200_57552_6_not_null                     | CHECK
+ producto              | 2200_57552_7_not_null                     | CHECK
  producto              | chk_producto_precios_coherentes           | CHECK
  producto              | producto_precio_compra_check              | CHECK
  producto              | producto_precio_venta_check               | CHECK
  producto              | producto_id_categoria_fkey                | FOREIGN KEY
  producto              | producto_pkey                             | PRIMARY KEY
  producto              | producto_sku_key                          | UNIQUE
- producto_proveedor    | 2200_49188_1_not_null                     | CHECK
- producto_proveedor    | 2200_49188_2_not_null                     | CHECK
- producto_proveedor    | 2200_49188_3_not_null                     | CHECK
+ producto_proveedor    | 2200_57576_1_not_null                     | CHECK
+ producto_proveedor    | 2200_57576_2_not_null                     | CHECK
+ producto_proveedor    | 2200_57576_3_not_null                     | CHECK
  producto_proveedor    | producto_proveedor_costo_referencia_check | CHECK
  producto_proveedor    | producto_proveedor_id_producto_fkey       | FOREIGN KEY
  producto_proveedor    | producto_proveedor_id_proveedor_fkey      | FOREIGN KEY
  producto_proveedor    | producto_proveedor_pkey                   | PRIMARY KEY
- proveedor             | 2200_49182_1_not_null                     | CHECK
- proveedor             | 2200_49182_2_not_null                     | CHECK
+ proveedor             | 2200_57570_1_not_null                     | CHECK
+ proveedor             | 2200_57570_2_not_null                     | CHECK
  proveedor             | proveedor_pkey                            | PRIMARY KEY
- sucursal              | 2200_49205_1_not_null                     | CHECK
- sucursal              | 2200_49205_2_not_null                     | CHECK
- sucursal              | 2200_49205_3_not_null                     | CHECK
- sucursal              | 2200_49205_4_not_null                     | CHECK
+ sucursal              | 2200_57593_1_not_null                     | CHECK
+ sucursal              | 2200_57593_2_not_null                     | CHECK
+ sucursal              | 2200_57593_3_not_null                     | CHECK
+ sucursal              | 2200_57593_4_not_null                     | CHECK
  sucursal              | sucursal_pkey                             | PRIMARY KEY
- venta                 | 2200_49255_1_not_null                     | CHECK
- venta                 | 2200_49255_2_not_null                     | CHECK
- venta                 | 2200_49255_3_not_null                     | CHECK
- venta                 | 2200_49255_4_not_null                     | CHECK
- venta                 | 2200_49255_5_not_null                     | CHECK
+ venta                 | 2200_57643_1_not_null                     | CHECK
+ venta                 | 2200_57643_2_not_null                     | CHECK
+ venta                 | 2200_57643_3_not_null                     | CHECK
+ venta                 | 2200_57643_4_not_null                     | CHECK
+ venta                 | 2200_57643_5_not_null                     | CHECK
  venta                 | venta_total_check                         | CHECK
  venta                 | venta_id_sucursal_fkey                    | FOREIGN KEY
  venta                 | venta_pkey                                | PRIMARY KEY

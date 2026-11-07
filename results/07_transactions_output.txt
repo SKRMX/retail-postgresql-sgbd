@@ -1,41 +1,52 @@
-﻿ id_sucursal | id_producto | existencia 
+﻿SET
+ id_sucursal | id_producto | existencia 
+-------------+-------------+------------
+           1 |          10 |        200
+(1 fila)
+
+psql.exe : psql:C:/Users/USER/Desktop/retail-postgresql-sgbd/sql/07_transactions.sql:66: NOTICE:  [ÉXITO COMMIT] Venta 
+47001 confirmada. Stock descontado. Total: $3309.90
+En C:\Users\USER\Desktop\retail-postgresql-sgbd\scripts\run_all_and_capture.ps1: 75 Carácter: 1
++ & $psqlExe -h 127.0.0.1 -p 5432 -U postgres -d retail_inventory_db -f ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (psql:C:/Users/U...Total: $3309.90:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+DO
+ id_sucursal | id_producto | existencia 
 -------------+-------------+------------
            1 |          10 |        198
 (1 fila)
 
-BEGIN
- id_venta 
-----------
-    47026
+ stock_antes_intento_invalido 
+------------------------------
+                          198
 (1 fila)
 
-INSERT 0 1
-INSERT 0 1
-UPDATE 1
-UPDATE 1
-INSERT 0 1
-COMMIT
- id_sucursal | id_producto | existencia 
--------------+-------------+------------
-           1 |          10 |        196
+psql:C:/Users/USER/Desktop/retail-postgresql-sgbd/sql/07_transactions.sql:126: NOTICE:  [ABORTADO POR STOCK] 
+Transacción revertida correctamente: Stock insuficiente para vender 50000 unidades del Producto 10
+DO
+ stock_despues_intento_invalido 
+--------------------------------
+                            198
 (1 fila)
 
- total_ventas_antes 
---------------------
-              47002
+ total_ventas_antes_rollback 
+-----------------------------
+                       47001
 (1 fila)
 
 BEGIN
-INSERT 0 1
 INSERT 0 1
 UPDATE 1
 ROLLBACK
- total_ventas_despues 
-----------------------
-                47002
+ total_ventas_despues_rollback 
+-------------------------------
+                         47001
 (1 fila)
 
- id_venta | id_sucursal | fecha | total | metodo_pago 
-----------+-------------+-------+-------+-------------
-(0 filas)
+ ventas_con_metodo_rechazado 
+-----------------------------
+                           0
+(1 fila)
 
