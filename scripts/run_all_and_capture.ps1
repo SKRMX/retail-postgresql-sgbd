@@ -1,4 +1,4 @@
-﻿# =============================================================================
+# =============================================================================
 # PROYECTO: retail-postgresql-sgbd
 # ARCHIVO: run_all_and_capture.ps1
 # DESCRIPCIÓN: Script de ejecución completa y captura de evidencia técnica real.

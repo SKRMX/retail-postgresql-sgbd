@@ -325,3 +325,4 @@ Para incorporar las evidencias gráficas en presentaciones o reportes académico
 2. **Impacto de índices compuestos ordenados:** La combinación de columnas de filtrado de igualdad (`id_sucursal`, `id_producto`) junto con una dimensión ordenada (`fecha DESC`) en `idx_movimiento_sucursal_producto_fecha` generó un rendimiento **84 veces superior** al evitar un escaneo completo de 120,000 registros y un ordenamiento costoso en memoria.
 3. **Consistencia declarativa:** Las restricciones `CHECK` en niveles de precios y existencias impidieron el ingreso de datos corruptos a nivel de motor, descargando a la capa de aplicación de validar la integridad básica del negocio.
 4. **Validación empírica vs. teórica:** La utilización de `EXPLAIN (ANALYZE, BUFFERS)` confirma que el costo estimado y los búferes leídos reflejan fielmente el consumo de recursos de hardware, validando que el modelo es óptimo para ambientes de producción.
+
