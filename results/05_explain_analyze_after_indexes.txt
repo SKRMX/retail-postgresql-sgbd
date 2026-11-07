@@ -1,0 +1,70 @@
+﻿                                                                        QUERY PLAN                                                                        
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=615.33..619.47 rows=1656 width=51) (actual time=2.165..2.183 rows=639 loops=1)
+   Sort Key: p.nombre
+   Sort Method: quicksort  Memory: 69kB
+   Buffers: shared hit=388
+   ->  Hash Join  (cost=401.66..526.79 rows=1656 width=51) (actual time=1.159..1.803 rows=639 loops=1)
+         Hash Cond: (p.id_producto = i.id_producto)
+         Buffers: shared hit=385
+         ->  Seq Scan on producto p  (cost=0.00..112.00 rows=5000 width=47) (actual time=0.010..0.333 rows=5000 loops=1)
+               Buffers: shared hit=62
+         ->  Hash  (cost=380.96..380.96 rows=1656 width=12) (actual time=0.979..0.979 rows=639 loops=1)
+               Buckets: 2048  Batches: 1  Memory Usage: 44kB
+               Buffers: shared hit=323
+               ->  Bitmap Heap Scan on inventario i  (cost=37.12..380.96 rows=1656 width=12) (actual time=0.081..0.916 rows=639 loops=1)
+                     Recheck Cond: ((id_sucursal = 3) AND (existencia <= stock_minimo))
+                     Heap Blocks: exact=319
+                     Buffers: shared hit=323
+                     ->  Bitmap Index Scan on idx_inventario_stock_bajo  (cost=0.00..36.70 rows=1656 width=0) (actual time=0.051..0.051 rows=639 loops=1)
+                           Index Cond: (id_sucursal = 3)
+                           Buffers: shared hit=4
+ Planning:
+   Buffers: shared hit=237
+ Planning Time: 3.016 ms
+ Execution Time: 2.265 ms
+(23 filas)
+
+                                                                          QUERY PLAN                                                                          
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=81.20..81.26 rows=21 width=35) (actual time=0.082..0.086 rows=50 loops=1)
+   Buffers: shared hit=9
+   ->  Sort  (cost=81.20..81.26 rows=21 width=35) (actual time=0.082..0.083 rows=50 loops=1)
+         Sort Key: fecha DESC
+         Sort Method: top-N heapsort  Memory: 32kB
+         Buffers: shared hit=9
+         ->  Bitmap Heap Scan on movimiento_inventario  (cost=4.63..80.74 rows=21 width=35) (actual time=0.029..0.048 rows=150 loops=1)
+               Recheck Cond: ((id_sucursal = 3) AND (id_producto = 125))
+               Heap Blocks: exact=3
+               Buffers: shared hit=6
+               ->  Bitmap Index Scan on idx_movimiento_sucursal_producto_fecha  (cost=0.00..4.63 rows=21 width=0) (actual time=0.015..0.015 rows=150 loops=1)
+                     Index Cond: ((id_sucursal = 3) AND (id_producto = 125))
+                     Buffers: shared hit=3
+ Planning:
+   Buffers: shared hit=82
+ Planning Time: 1.460 ms
+ Execution Time: 0.099 ms
+(17 filas)
+
+                                                                                       QUERY PLAN                                                                                       
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ GroupAggregate  (cost=981.42..1004.14 rows=909 width=44) (actual time=1.236..1.523 rows=31 loops=1)
+   Group Key: (date(fecha))
+   Buffers: shared hit=308
+   ->  Sort  (cost=981.42..983.69 rows=909 width=10) (actual time=1.210..1.276 rows=2432 loops=1)
+         Sort Key: (date(fecha))
+         Sort Method: quicksort  Memory: 173kB
+         Buffers: shared hit=308
+         ->  Bitmap Heap Scan on venta  (cost=27.88..936.75 rows=909 width=10) (actual time=0.161..0.981 rows=2432 loops=1)
+               Recheck Cond: ((id_sucursal = 3) AND (fecha >= '2026-10-01 00:00:00'::timestamp without time zone) AND (fecha < '2026-11-01 00:00:00'::timestamp without time zone))
+               Heap Blocks: exact=293
+               Buffers: shared hit=305
+               ->  Bitmap Index Scan on idx_venta_sucursal_fecha  (cost=0.00..27.65 rows=909 width=0) (actual time=0.132..0.132 rows=2432 loops=1)
+                     Index Cond: ((id_sucursal = 3) AND (fecha >= '2026-10-01 00:00:00'::timestamp without time zone) AND (fecha < '2026-11-01 00:00:00'::timestamp without time zone))
+                     Buffers: shared hit=12
+ Planning:
+   Buffers: shared hit=70
+ Planning Time: 1.208 ms
+ Execution Time: 1.571 ms
+(18 filas)
+

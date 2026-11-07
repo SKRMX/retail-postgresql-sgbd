@@ -1,0 +1,41 @@
+﻿ id_sucursal | id_producto | existencia 
+-------------+-------------+------------
+           1 |          10 |        198
+(1 fila)
+
+BEGIN
+ id_venta 
+----------
+    47026
+(1 fila)
+
+INSERT 0 1
+INSERT 0 1
+UPDATE 1
+UPDATE 1
+INSERT 0 1
+COMMIT
+ id_sucursal | id_producto | existencia 
+-------------+-------------+------------
+           1 |          10 |        196
+(1 fila)
+
+ total_ventas_antes 
+--------------------
+              47002
+(1 fila)
+
+BEGIN
+INSERT 0 1
+INSERT 0 1
+UPDATE 1
+ROLLBACK
+ total_ventas_despues 
+----------------------
+                47002
+(1 fila)
+
+ id_venta | id_sucursal | fecha | total | metodo_pago 
+----------+-------------+-------+-------+-------------
+(0 filas)
+

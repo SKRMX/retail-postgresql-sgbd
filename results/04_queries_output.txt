@@ -1,0 +1,732 @@
+﻿       sku       |           nombre            | existencia | stock_minimo 
+-----------------+-----------------------------+------------+--------------
+ PROD-SKU-000029 | Producto Cat10 Modelo 00029 |          9 |           23
+ PROD-SKU-000069 | Producto Cat10 Modelo 00069 |          3 |           10
+ PROD-SKU-000109 | Producto Cat10 Modelo 00109 |          6 |           17
+ PROD-SKU-000149 | Producto Cat10 Modelo 00149 |          3 |           15
+ PROD-SKU-000189 | Producto Cat10 Modelo 00189 |          4 |           11
+ PROD-SKU-000229 | Producto Cat10 Modelo 00229 |          7 |           18
+ PROD-SKU-000269 | Producto Cat10 Modelo 00269 |          0 |           18
+ PROD-SKU-000309 | Producto Cat10 Modelo 00309 |          6 |           18
+ PROD-SKU-000349 | Producto Cat10 Modelo 00349 |          7 |           12
+ PROD-SKU-000389 | Producto Cat10 Modelo 00389 |          5 |           22
+ PROD-SKU-000429 | Producto Cat10 Modelo 00429 |          8 |           18
+ PROD-SKU-000469 | Producto Cat10 Modelo 00469 |          7 |           11
+ PROD-SKU-000509 | Producto Cat10 Modelo 00509 |          8 |           24
+ PROD-SKU-000549 | Producto Cat10 Modelo 00549 |          7 |           23
+ PROD-SKU-000589 | Producto Cat10 Modelo 00589 |          4 |           10
+ PROD-SKU-000629 | Producto Cat10 Modelo 00629 |          1 |           10
+ PROD-SKU-000669 | Producto Cat10 Modelo 00669 |          1 |           17
+ PROD-SKU-000709 | Producto Cat10 Modelo 00709 |          7 |           11
+ PROD-SKU-000749 | Producto Cat10 Modelo 00749 |          6 |           21
+ PROD-SKU-000789 | Producto Cat10 Modelo 00789 |          9 |           16
+ PROD-SKU-000829 | Producto Cat10 Modelo 00829 |          4 |           17
+ PROD-SKU-000869 | Producto Cat10 Modelo 00869 |          4 |           11
+ PROD-SKU-000909 | Producto Cat10 Modelo 00909 |          9 |           21
+ PROD-SKU-000949 | Producto Cat10 Modelo 00949 |          1 |           22
+ PROD-SKU-000989 | Producto Cat10 Modelo 00989 |          2 |           20
+ PROD-SKU-001029 | Producto Cat10 Modelo 01029 |          8 |           16
+ PROD-SKU-001069 | Producto Cat10 Modelo 01069 |          4 |           22
+ PROD-SKU-001109 | Producto Cat10 Modelo 01109 |          0 |           22
+ PROD-SKU-001149 | Producto Cat10 Modelo 01149 |          0 |           10
+ PROD-SKU-001189 | Producto Cat10 Modelo 01189 |          9 |           21
+ PROD-SKU-001229 | Producto Cat10 Modelo 01229 |          8 |           21
+ PROD-SKU-001269 | Producto Cat10 Modelo 01269 |          0 |           11
+ PROD-SKU-001309 | Producto Cat10 Modelo 01309 |          2 |           23
+ PROD-SKU-001349 | Producto Cat10 Modelo 01349 |          4 |           24
+ PROD-SKU-001389 | Producto Cat10 Modelo 01389 |          5 |           20
+ PROD-SKU-001429 | Producto Cat10 Modelo 01429 |          8 |           15
+ PROD-SKU-001469 | Producto Cat10 Modelo 01469 |          0 |           15
+ PROD-SKU-001509 | Producto Cat10 Modelo 01509 |          3 |           20
+ PROD-SKU-001549 | Producto Cat10 Modelo 01549 |          5 |           17
+ PROD-SKU-001589 | Producto Cat10 Modelo 01589 |          9 |           10
+ PROD-SKU-001629 | Producto Cat10 Modelo 01629 |          1 |           15
+ PROD-SKU-001669 | Producto Cat10 Modelo 01669 |          9 |           20
+ PROD-SKU-001709 | Producto Cat10 Modelo 01709 |          3 |           20
+ PROD-SKU-001749 | Producto Cat10 Modelo 01749 |          3 |           16
+ PROD-SKU-001789 | Producto Cat10 Modelo 01789 |          2 |           14
+ PROD-SKU-001829 | Producto Cat10 Modelo 01829 |          3 |           12
+ PROD-SKU-001869 | Producto Cat10 Modelo 01869 |          6 |           15
+ PROD-SKU-001909 | Producto Cat10 Modelo 01909 |          3 |           22
+ PROD-SKU-001949 | Producto Cat10 Modelo 01949 |          5 |           10
+ PROD-SKU-001989 | Producto Cat10 Modelo 01989 |          9 |           24
+ PROD-SKU-002029 | Producto Cat10 Modelo 02029 |          4 |           14
+ PROD-SKU-002069 | Producto Cat10 Modelo 02069 |          5 |           21
+ PROD-SKU-002109 | Producto Cat10 Modelo 02109 |          6 |           14
+ PROD-SKU-002149 | Producto Cat10 Modelo 02149 |          9 |           20
+ PROD-SKU-002189 | Producto Cat10 Modelo 02189 |          1 |           16
+ PROD-SKU-002229 | Producto Cat10 Modelo 02229 |          8 |           15
+ PROD-SKU-002269 | Producto Cat10 Modelo 02269 |          4 |           23
+ PROD-SKU-002309 | Producto Cat10 Modelo 02309 |          3 |           23
+ PROD-SKU-002349 | Producto Cat10 Modelo 02349 |          7 |           10
+ PROD-SKU-002389 | Producto Cat10 Modelo 02389 |          6 |           18
+ PROD-SKU-002429 | Producto Cat10 Modelo 02429 |          9 |           20
+ PROD-SKU-002469 | Producto Cat10 Modelo 02469 |          4 |           16
+ PROD-SKU-002509 | Producto Cat10 Modelo 02509 |          2 |           12
+ PROD-SKU-002549 | Producto Cat10 Modelo 02549 |          1 |           11
+ PROD-SKU-002589 | Producto Cat10 Modelo 02589 |          4 |           23
+ PROD-SKU-002629 | Producto Cat10 Modelo 02629 |          7 |           24
+ PROD-SKU-002669 | Producto Cat10 Modelo 02669 |          1 |           16
+ PROD-SKU-002709 | Producto Cat10 Modelo 02709 |          7 |           20
+ PROD-SKU-002749 | Producto Cat10 Modelo 02749 |          0 |           18
+ PROD-SKU-002789 | Producto Cat10 Modelo 02789 |          3 |           21
+ PROD-SKU-002829 | Producto Cat10 Modelo 02829 |          9 |           19
+ PROD-SKU-002869 | Producto Cat10 Modelo 02869 |          3 |           23
+ PROD-SKU-002909 | Producto Cat10 Modelo 02909 |          9 |           14
+ PROD-SKU-002949 | Producto Cat10 Modelo 02949 |          0 |           19
+ PROD-SKU-002989 | Producto Cat10 Modelo 02989 |          8 |           21
+ PROD-SKU-003029 | Producto Cat10 Modelo 03029 |          9 |           23
+ PROD-SKU-003069 | Producto Cat10 Modelo 03069 |          2 |           18
+ PROD-SKU-003109 | Producto Cat10 Modelo 03109 |          4 |           19
+ PROD-SKU-003149 | Producto Cat10 Modelo 03149 |          1 |           18
+ PROD-SKU-003189 | Producto Cat10 Modelo 03189 |          9 |           14
+ PROD-SKU-003229 | Producto Cat10 Modelo 03229 |          1 |           14
+ PROD-SKU-003269 | Producto Cat10 Modelo 03269 |          0 |           14
+ PROD-SKU-003309 | Producto Cat10 Modelo 03309 |          0 |           20
+ PROD-SKU-003349 | Producto Cat10 Modelo 03349 |          2 |           12
+ PROD-SKU-003389 | Producto Cat10 Modelo 03389 |          7 |           13
+ PROD-SKU-003429 | Producto Cat10 Modelo 03429 |          3 |           14
+ PROD-SKU-003469 | Producto Cat10 Modelo 03469 |          1 |           10
+ PROD-SKU-003509 | Producto Cat10 Modelo 03509 |          5 |           17
+ PROD-SKU-003549 | Producto Cat10 Modelo 03549 |          2 |           13
+ PROD-SKU-003589 | Producto Cat10 Modelo 03589 |          1 |           18
+ PROD-SKU-003629 | Producto Cat10 Modelo 03629 |          1 |           11
+ PROD-SKU-003669 | Producto Cat10 Modelo 03669 |          3 |           13
+ PROD-SKU-003709 | Producto Cat10 Modelo 03709 |          7 |           16
+ PROD-SKU-003749 | Producto Cat10 Modelo 03749 |          9 |           10
+ PROD-SKU-003789 | Producto Cat10 Modelo 03789 |          5 |           12
+ PROD-SKU-003829 | Producto Cat10 Modelo 03829 |          6 |           20
+ PROD-SKU-003869 | Producto Cat10 Modelo 03869 |          1 |           16
+ PROD-SKU-003909 | Producto Cat10 Modelo 03909 |          7 |           13
+ PROD-SKU-003949 | Producto Cat10 Modelo 03949 |          5 |           13
+ PROD-SKU-003989 | Producto Cat10 Modelo 03989 |          7 |           17
+ PROD-SKU-004029 | Producto Cat10 Modelo 04029 |          0 |           12
+ PROD-SKU-004069 | Producto Cat10 Modelo 04069 |          0 |           17
+ PROD-SKU-004109 | Producto Cat10 Modelo 04109 |          0 |           11
+ PROD-SKU-004149 | Producto Cat10 Modelo 04149 |          2 |           24
+ PROD-SKU-004189 | Producto Cat10 Modelo 04189 |          0 |           24
+ PROD-SKU-004229 | Producto Cat10 Modelo 04229 |          2 |           10
+ PROD-SKU-004269 | Producto Cat10 Modelo 04269 |          4 |           19
+ PROD-SKU-004309 | Producto Cat10 Modelo 04309 |          5 |           16
+ PROD-SKU-004349 | Producto Cat10 Modelo 04349 |          4 |           20
+ PROD-SKU-004389 | Producto Cat10 Modelo 04389 |          3 |           11
+ PROD-SKU-004429 | Producto Cat10 Modelo 04429 |          5 |           14
+ PROD-SKU-004469 | Producto Cat10 Modelo 04469 |          3 |           14
+ PROD-SKU-004509 | Producto Cat10 Modelo 04509 |          0 |           15
+ PROD-SKU-004549 | Producto Cat10 Modelo 04549 |          2 |           23
+ PROD-SKU-004589 | Producto Cat10 Modelo 04589 |          6 |           17
+ PROD-SKU-004629 | Producto Cat10 Modelo 04629 |          3 |           15
+ PROD-SKU-004669 | Producto Cat10 Modelo 04669 |          9 |           12
+ PROD-SKU-004709 | Producto Cat10 Modelo 04709 |          0 |           14
+ PROD-SKU-004749 | Producto Cat10 Modelo 04749 |          8 |           18
+ PROD-SKU-004789 | Producto Cat10 Modelo 04789 |          7 |           24
+ PROD-SKU-004829 | Producto Cat10 Modelo 04829 |          8 |           23
+ PROD-SKU-004869 | Producto Cat10 Modelo 04869 |          7 |           19
+ PROD-SKU-004909 | Producto Cat10 Modelo 04909 |          1 |           21
+ PROD-SKU-004949 | Producto Cat10 Modelo 04949 |          1 |           18
+ PROD-SKU-004989 | Producto Cat10 Modelo 04989 |          1 |           17
+ PROD-SKU-002510 | Producto Cat11 Modelo 02510 |         22 |           24
+ PROD-SKU-003430 | Producto Cat11 Modelo 03430 |         21 |           22
+ PROD-SKU-000013 | Producto Cat14 Modelo 00013 |          8 |           23
+ PROD-SKU-000053 | Producto Cat14 Modelo 00053 |          8 |           14
+ PROD-SKU-000093 | Producto Cat14 Modelo 00093 |          4 |           20
+ PROD-SKU-000133 | Producto Cat14 Modelo 00133 |          5 |           23
+ PROD-SKU-000173 | Producto Cat14 Modelo 00173 |          6 |           18
+ PROD-SKU-000213 | Producto Cat14 Modelo 00213 |          6 |           17
+ PROD-SKU-000253 | Producto Cat14 Modelo 00253 |          6 |           19
+ PROD-SKU-000293 | Producto Cat14 Modelo 00293 |          6 |           12
+ PROD-SKU-000333 | Producto Cat14 Modelo 00333 |          8 |           16
+ PROD-SKU-000373 | Producto Cat14 Modelo 00373 |          3 |           12
+ PROD-SKU-000413 | Producto Cat14 Modelo 00413 |          1 |           14
+ PROD-SKU-000453 | Producto Cat14 Modelo 00453 |          7 |           14
+ PROD-SKU-000493 | Producto Cat14 Modelo 00493 |          1 |           17
+ PROD-SKU-000533 | Producto Cat14 Modelo 00533 |          0 |           16
+ PROD-SKU-000573 | Producto Cat14 Modelo 00573 |          4 |           21
+ PROD-SKU-000613 | Producto Cat14 Modelo 00613 |          2 |           18
+ PROD-SKU-000653 | Producto Cat14 Modelo 00653 |          5 |           11
+ PROD-SKU-000693 | Producto Cat14 Modelo 00693 |          0 |           14
+ PROD-SKU-000733 | Producto Cat14 Modelo 00733 |          6 |           19
+ PROD-SKU-000773 | Producto Cat14 Modelo 00773 |          6 |           10
+ PROD-SKU-000813 | Producto Cat14 Modelo 00813 |          4 |           22
+ PROD-SKU-000853 | Producto Cat14 Modelo 00853 |          1 |           17
+ PROD-SKU-000893 | Producto Cat14 Modelo 00893 |          7 |           23
+ PROD-SKU-000933 | Producto Cat14 Modelo 00933 |          6 |           15
+ PROD-SKU-000973 | Producto Cat14 Modelo 00973 |          5 |           14
+ PROD-SKU-001013 | Producto Cat14 Modelo 01013 |          7 |           12
+ PROD-SKU-001053 | Producto Cat14 Modelo 01053 |          3 |           21
+ PROD-SKU-001093 | Producto Cat14 Modelo 01093 |          2 |           19
+ PROD-SKU-001133 | Producto Cat14 Modelo 01133 |          1 |           19
+ PROD-SKU-001173 | Producto Cat14 Modelo 01173 |          8 |           10
+ PROD-SKU-001213 | Producto Cat14 Modelo 01213 |          0 |           16
+ PROD-SKU-001253 | Producto Cat14 Modelo 01253 |          9 |           11
+ PROD-SKU-001293 | Producto Cat14 Modelo 01293 |          0 |           20
+ PROD-SKU-001333 | Producto Cat14 Modelo 01333 |          0 |           13
+ PROD-SKU-001373 | Producto Cat14 Modelo 01373 |          3 |           10
+ PROD-SKU-001413 | Producto Cat14 Modelo 01413 |          6 |           18
+ PROD-SKU-001453 | Producto Cat14 Modelo 01453 |          1 |           11
+ PROD-SKU-001493 | Producto Cat14 Modelo 01493 |          8 |           13
+ PROD-SKU-001533 | Producto Cat14 Modelo 01533 |          1 |           12
+ PROD-SKU-001573 | Producto Cat14 Modelo 01573 |          4 |           24
+ PROD-SKU-001613 | Producto Cat14 Modelo 01613 |          6 |           12
+ PROD-SKU-001653 | Producto Cat14 Modelo 01653 |          3 |           15
+ PROD-SKU-001693 | Producto Cat14 Modelo 01693 |          5 |           19
+ PROD-SKU-001733 | Producto Cat14 Modelo 01733 |          7 |           19
+ PROD-SKU-001773 | Producto Cat14 Modelo 01773 |          8 |           12
+ PROD-SKU-001813 | Producto Cat14 Modelo 01813 |          4 |           10
+ PROD-SKU-001853 | Producto Cat14 Modelo 01853 |          6 |           12
+ PROD-SKU-001893 | Producto Cat14 Modelo 01893 |          4 |           24
+ PROD-SKU-001933 | Producto Cat14 Modelo 01933 |          0 |           15
+ PROD-SKU-001973 | Producto Cat14 Modelo 01973 |          4 |           15
+ PROD-SKU-002013 | Producto Cat14 Modelo 02013 |          7 |           10
+ PROD-SKU-002053 | Producto Cat14 Modelo 02053 |          6 |           14
+ PROD-SKU-002093 | Producto Cat14 Modelo 02093 |          4 |           12
+ PROD-SKU-002133 | Producto Cat14 Modelo 02133 |          3 |           17
+ PROD-SKU-002173 | Producto Cat14 Modelo 02173 |          1 |           23
+ PROD-SKU-002213 | Producto Cat14 Modelo 02213 |          1 |           19
+ PROD-SKU-002253 | Producto Cat14 Modelo 02253 |          3 |           17
+ PROD-SKU-002293 | Producto Cat14 Modelo 02293 |          5 |           19
+ PROD-SKU-002333 | Producto Cat14 Modelo 02333 |          2 |           24
+ PROD-SKU-002373 | Producto Cat14 Modelo 02373 |          8 |           18
+ PROD-SKU-002413 | Producto Cat14 Modelo 02413 |          2 |           14
+ PROD-SKU-002453 | Producto Cat14 Modelo 02453 |          5 |           10
+ PROD-SKU-002493 | Producto Cat14 Modelo 02493 |          3 |           17
+ PROD-SKU-002533 | Producto Cat14 Modelo 02533 |          2 |           17
+ PROD-SKU-002573 | Producto Cat14 Modelo 02573 |          0 |           22
+ PROD-SKU-002613 | Producto Cat14 Modelo 02613 |          2 |           13
+ PROD-SKU-002653 | Producto Cat14 Modelo 02653 |          1 |           20
+ PROD-SKU-002693 | Producto Cat14 Modelo 02693 |          5 |           22
+ PROD-SKU-002733 | Producto Cat14 Modelo 02733 |          6 |           17
+ PROD-SKU-002773 | Producto Cat14 Modelo 02773 |          9 |           23
+ PROD-SKU-002813 | Producto Cat14 Modelo 02813 |          4 |           11
+ PROD-SKU-002853 | Producto Cat14 Modelo 02853 |          4 |           14
+ PROD-SKU-002893 | Producto Cat14 Modelo 02893 |          9 |           16
+ PROD-SKU-002933 | Producto Cat14 Modelo 02933 |          0 |           18
+ PROD-SKU-002973 | Producto Cat14 Modelo 02973 |          1 |           24
+ PROD-SKU-003013 | Producto Cat14 Modelo 03013 |          0 |           18
+ PROD-SKU-003053 | Producto Cat14 Modelo 03053 |          1 |           10
+ PROD-SKU-003093 | Producto Cat14 Modelo 03093 |          8 |           22
+ PROD-SKU-003133 | Producto Cat14 Modelo 03133 |          4 |           19
+ PROD-SKU-003173 | Producto Cat14 Modelo 03173 |          0 |           11
+ PROD-SKU-003213 | Producto Cat14 Modelo 03213 |          2 |           18
+ PROD-SKU-003253 | Producto Cat14 Modelo 03253 |          3 |           23
+ PROD-SKU-003293 | Producto Cat14 Modelo 03293 |          8 |           17
+ PROD-SKU-003333 | Producto Cat14 Modelo 03333 |          7 |           13
+ PROD-SKU-003373 | Producto Cat14 Modelo 03373 |          2 |           23
+ PROD-SKU-003413 | Producto Cat14 Modelo 03413 |          5 |           23
+ PROD-SKU-003453 | Producto Cat14 Modelo 03453 |          0 |           17
+ PROD-SKU-003493 | Producto Cat14 Modelo 03493 |          0 |           23
+ PROD-SKU-003533 | Producto Cat14 Modelo 03533 |          8 |           20
+ PROD-SKU-003573 | Producto Cat14 Modelo 03573 |          8 |           24
+ PROD-SKU-003613 | Producto Cat14 Modelo 03613 |          7 |           10
+ PROD-SKU-003653 | Producto Cat14 Modelo 03653 |          4 |           22
+ PROD-SKU-003693 | Producto Cat14 Modelo 03693 |          4 |           20
+ PROD-SKU-003733 | Producto Cat14 Modelo 03733 |          0 |           12
+ PROD-SKU-003773 | Producto Cat14 Modelo 03773 |          6 |           22
+ PROD-SKU-003813 | Producto Cat14 Modelo 03813 |          8 |           21
+ PROD-SKU-003853 | Producto Cat14 Modelo 03853 |          3 |           14
+ PROD-SKU-003893 | Producto Cat14 Modelo 03893 |          0 |           22
+ PROD-SKU-003933 | Producto Cat14 Modelo 03933 |          2 |           22
+ PROD-SKU-003973 | Producto Cat14 Modelo 03973 |          3 |           20
+ PROD-SKU-004013 | Producto Cat14 Modelo 04013 |          0 |           21
+ PROD-SKU-004053 | Producto Cat14 Modelo 04053 |          0 |           19
+ PROD-SKU-004093 | Producto Cat14 Modelo 04093 |          6 |           18
+ PROD-SKU-004133 | Producto Cat14 Modelo 04133 |          1 |           20
+ PROD-SKU-004173 | Producto Cat14 Modelo 04173 |          7 |           10
+ PROD-SKU-004213 | Producto Cat14 Modelo 04213 |          1 |           21
+ PROD-SKU-004253 | Producto Cat14 Modelo 04253 |          7 |           21
+ PROD-SKU-004293 | Producto Cat14 Modelo 04293 |          3 |           10
+ PROD-SKU-004333 | Producto Cat14 Modelo 04333 |          7 |           18
+ PROD-SKU-004373 | Producto Cat14 Modelo 04373 |          9 |           18
+ PROD-SKU-004413 | Producto Cat14 Modelo 04413 |          5 |           14
+ PROD-SKU-004453 | Producto Cat14 Modelo 04453 |          2 |           24
+ PROD-SKU-004493 | Producto Cat14 Modelo 04493 |          2 |           22
+ PROD-SKU-004533 | Producto Cat14 Modelo 04533 |          5 |           23
+ PROD-SKU-004573 | Producto Cat14 Modelo 04573 |          9 |           22
+ PROD-SKU-004613 | Producto Cat14 Modelo 04613 |          6 |           10
+ PROD-SKU-004653 | Producto Cat14 Modelo 04653 |          1 |           11
+ PROD-SKU-004693 | Producto Cat14 Modelo 04693 |          3 |           21
+ PROD-SKU-004733 | Producto Cat14 Modelo 04733 |          0 |           17
+ PROD-SKU-004773 | Producto Cat14 Modelo 04773 |          1 |           13
+ PROD-SKU-004813 | Producto Cat14 Modelo 04813 |          5 |           17
+ PROD-SKU-004853 | Producto Cat14 Modelo 04853 |          4 |           13
+ PROD-SKU-004893 | Producto Cat14 Modelo 04893 |          0 |           18
+ PROD-SKU-004933 | Producto Cat14 Modelo 04933 |          5 |           17
+ PROD-SKU-004973 | Producto Cat14 Modelo 04973 |          8 |           24
+ PROD-SKU-001574 | Producto Cat15 Modelo 01574 |         21 |           22
+ PROD-SKU-004854 | Producto Cat15 Modelo 04854 |         21 |           21
+ PROD-SKU-003875 | Producto Cat16 Modelo 03875 |         20 |           24
+ PROD-SKU-001716 | Producto Cat17 Modelo 01716 |         20 |           23
+ PROD-SKU-003736 | Producto Cat17 Modelo 03736 |         20 |           21
+ PROD-SKU-000037 | Producto Cat18 Modelo 00037 |          3 |           18
+ PROD-SKU-000077 | Producto Cat18 Modelo 00077 |          1 |           14
+ PROD-SKU-000117 | Producto Cat18 Modelo 00117 |          4 |           22
+ PROD-SKU-000157 | Producto Cat18 Modelo 00157 |          8 |           11
+ PROD-SKU-000197 | Producto Cat18 Modelo 00197 |          2 |           16
+ PROD-SKU-000237 | Producto Cat18 Modelo 00237 |          0 |           12
+ PROD-SKU-000277 | Producto Cat18 Modelo 00277 |          0 |           17
+ PROD-SKU-000317 | Producto Cat18 Modelo 00317 |          9 |           12
+ PROD-SKU-000357 | Producto Cat18 Modelo 00357 |          1 |           13
+ PROD-SKU-000397 | Producto Cat18 Modelo 00397 |          6 |           12
+ PROD-SKU-000437 | Producto Cat18 Modelo 00437 |          2 |           20
+ PROD-SKU-000477 | Producto Cat18 Modelo 00477 |          8 |           18
+ PROD-SKU-000517 | Producto Cat18 Modelo 00517 |          4 |           21
+ PROD-SKU-000557 | Producto Cat18 Modelo 00557 |          1 |           21
+ PROD-SKU-000597 | Producto Cat18 Modelo 00597 |          9 |           21
+ PROD-SKU-000637 | Producto Cat18 Modelo 00637 |          4 |           13
+ PROD-SKU-000677 | Producto Cat18 Modelo 00677 |          3 |           19
+ PROD-SKU-000717 | Producto Cat18 Modelo 00717 |          0 |           10
+ PROD-SKU-000757 | Producto Cat18 Modelo 00757 |          5 |           23
+ PROD-SKU-000797 | Producto Cat18 Modelo 00797 |          9 |           23
+ PROD-SKU-000837 | Producto Cat18 Modelo 00837 |          5 |           17
+ PROD-SKU-000877 | Producto Cat18 Modelo 00877 |          4 |           22
+ PROD-SKU-000917 | Producto Cat18 Modelo 00917 |          0 |           24
+ PROD-SKU-000957 | Producto Cat18 Modelo 00957 |          1 |           17
+ PROD-SKU-000997 | Producto Cat18 Modelo 00997 |          1 |           23
+ PROD-SKU-001037 | Producto Cat18 Modelo 01037 |          3 |           24
+ PROD-SKU-001077 | Producto Cat18 Modelo 01077 |          9 |           24
+ PROD-SKU-001117 | Producto Cat18 Modelo 01117 |          5 |           24
+ PROD-SKU-001157 | Producto Cat18 Modelo 01157 |          8 |           24
+ PROD-SKU-001197 | Producto Cat18 Modelo 01197 |          9 |           20
+ PROD-SKU-001237 | Producto Cat18 Modelo 01237 |          0 |           14
+ PROD-SKU-001277 | Producto Cat18 Modelo 01277 |          0 |           20
+ PROD-SKU-001317 | Producto Cat18 Modelo 01317 |          5 |           11
+ PROD-SKU-001357 | Producto Cat18 Modelo 01357 |          4 |           12
+ PROD-SKU-001397 | Producto Cat18 Modelo 01397 |          5 |           21
+ PROD-SKU-001437 | Producto Cat18 Modelo 01437 |          4 |           15
+ PROD-SKU-001477 | Producto Cat18 Modelo 01477 |          9 |           15
+ PROD-SKU-001517 | Producto Cat18 Modelo 01517 |          7 |           17
+ PROD-SKU-001557 | Producto Cat18 Modelo 01557 |          2 |           18
+ PROD-SKU-001597 | Producto Cat18 Modelo 01597 |          9 |           23
+ PROD-SKU-001637 | Producto Cat18 Modelo 01637 |          6 |           18
+ PROD-SKU-001677 | Producto Cat18 Modelo 01677 |          5 |           11
+ PROD-SKU-001717 | Producto Cat18 Modelo 01717 |          1 |           16
+ PROD-SKU-001757 | Producto Cat18 Modelo 01757 |          1 |           15
+ PROD-SKU-001797 | Producto Cat18 Modelo 01797 |          4 |           12
+ PROD-SKU-001837 | Producto Cat18 Modelo 01837 |          8 |           17
+ PROD-SKU-001877 | Producto Cat18 Modelo 01877 |          9 |           23
+ PROD-SKU-001917 | Producto Cat18 Modelo 01917 |          7 |           23
+ PROD-SKU-001957 | Producto Cat18 Modelo 01957 |          1 |           18
+ PROD-SKU-001997 | Producto Cat18 Modelo 01997 |          3 |           11
+ PROD-SKU-002037 | Producto Cat18 Modelo 02037 |          4 |           17
+ PROD-SKU-002077 | Producto Cat18 Modelo 02077 |          5 |           19
+ PROD-SKU-002117 | Producto Cat18 Modelo 02117 |          4 |           22
+ PROD-SKU-002157 | Producto Cat18 Modelo 02157 |          8 |           15
+ PROD-SKU-002197 | Producto Cat18 Modelo 02197 |          2 |           22
+ PROD-SKU-002237 | Producto Cat18 Modelo 02237 |          5 |           11
+ PROD-SKU-002277 | Producto Cat18 Modelo 02277 |          6 |           16
+ PROD-SKU-002317 | Producto Cat18 Modelo 02317 |          5 |           21
+ PROD-SKU-002357 | Producto Cat18 Modelo 02357 |          0 |           15
+ PROD-SKU-002397 | Producto Cat18 Modelo 02397 |          6 |           21
+ PROD-SKU-002437 | Producto Cat18 Modelo 02437 |          6 |           19
+ PROD-SKU-002477 | Producto Cat18 Modelo 02477 |          5 |           16
+ PROD-SKU-002517 | Producto Cat18 Modelo 02517 |          2 |           20
+ PROD-SKU-002557 | Producto Cat18 Modelo 02557 |          3 |           14
+ PROD-SKU-002597 | Producto Cat18 Modelo 02597 |          1 |           12
+ PROD-SKU-002637 | Producto Cat18 Modelo 02637 |          7 |           24
+ PROD-SKU-002677 | Producto Cat18 Modelo 02677 |          5 |           16
+ PROD-SKU-002717 | Producto Cat18 Modelo 02717 |          7 |           19
+ PROD-SKU-002757 | Producto Cat18 Modelo 02757 |          9 |           20
+ PROD-SKU-002797 | Producto Cat18 Modelo 02797 |          0 |           13
+ PROD-SKU-002837 | Producto Cat18 Modelo 02837 |          2 |           12
+ PROD-SKU-002877 | Producto Cat18 Modelo 02877 |          3 |           14
+ PROD-SKU-002917 | Producto Cat18 Modelo 02917 |          0 |           21
+ PROD-SKU-002957 | Producto Cat18 Modelo 02957 |          4 |           12
+ PROD-SKU-002997 | Producto Cat18 Modelo 02997 |          2 |           23
+ PROD-SKU-003037 | Producto Cat18 Modelo 03037 |          1 |           11
+ PROD-SKU-003077 | Producto Cat18 Modelo 03077 |          7 |           11
+ PROD-SKU-003117 | Producto Cat18 Modelo 03117 |          4 |           17
+ PROD-SKU-003157 | Producto Cat18 Modelo 03157 |          4 |           22
+ PROD-SKU-003197 | Producto Cat18 Modelo 03197 |          0 |           19
+ PROD-SKU-003237 | Producto Cat18 Modelo 03237 |          8 |           20
+ PROD-SKU-003257 | Producto Cat18 Modelo 03257 |         21 |           24
+ PROD-SKU-003277 | Producto Cat18 Modelo 03277 |          5 |           21
+ PROD-SKU-003317 | Producto Cat18 Modelo 03317 |          8 |           23
+ PROD-SKU-003357 | Producto Cat18 Modelo 03357 |          8 |           10
+ PROD-SKU-003397 | Producto Cat18 Modelo 03397 |          9 |           15
+ PROD-SKU-003437 | Producto Cat18 Modelo 03437 |          6 |           11
+ PROD-SKU-003477 | Producto Cat18 Modelo 03477 |          9 |           23
+ PROD-SKU-003517 | Producto Cat18 Modelo 03517 |          8 |           23
+ PROD-SKU-003557 | Producto Cat18 Modelo 03557 |          9 |           11
+ PROD-SKU-003597 | Producto Cat18 Modelo 03597 |          0 |           12
+ PROD-SKU-003637 | Producto Cat18 Modelo 03637 |          7 |           24
+ PROD-SKU-003677 | Producto Cat18 Modelo 03677 |          7 |           10
+ PROD-SKU-003717 | Producto Cat18 Modelo 03717 |          8 |           23
+ PROD-SKU-003757 | Producto Cat18 Modelo 03757 |          4 |           19
+ PROD-SKU-003797 | Producto Cat18 Modelo 03797 |          1 |           16
+ PROD-SKU-003837 | Producto Cat18 Modelo 03837 |          3 |           10
+ PROD-SKU-003877 | Producto Cat18 Modelo 03877 |          8 |           16
+ PROD-SKU-003917 | Producto Cat18 Modelo 03917 |          6 |           14
+ PROD-SKU-003957 | Producto Cat18 Modelo 03957 |          5 |           17
+ PROD-SKU-003997 | Producto Cat18 Modelo 03997 |          4 |           17
+ PROD-SKU-004037 | Producto Cat18 Modelo 04037 |          5 |           16
+ PROD-SKU-004077 | Producto Cat18 Modelo 04077 |          2 |           23
+ PROD-SKU-004117 | Producto Cat18 Modelo 04117 |          1 |           10
+ PROD-SKU-004157 | Producto Cat18 Modelo 04157 |          4 |           12
+ PROD-SKU-004197 | Producto Cat18 Modelo 04197 |          1 |           19
+ PROD-SKU-004237 | Producto Cat18 Modelo 04237 |          4 |           20
+ PROD-SKU-004277 | Producto Cat18 Modelo 04277 |          1 |           24
+ PROD-SKU-004317 | Producto Cat18 Modelo 04317 |          1 |           12
+ PROD-SKU-004357 | Producto Cat18 Modelo 04357 |          9 |           14
+ PROD-SKU-004397 | Producto Cat18 Modelo 04397 |          1 |           19
+ PROD-SKU-004437 | Producto Cat18 Modelo 04437 |          3 |           18
+ PROD-SKU-004477 | Producto Cat18 Modelo 04477 |          7 |           19
+ PROD-SKU-004517 | Producto Cat18 Modelo 04517 |          0 |           24
+ PROD-SKU-004557 | Producto Cat18 Modelo 04557 |          5 |           21
+ PROD-SKU-004597 | Producto Cat18 Modelo 04597 |          6 |           19
+ PROD-SKU-004637 | Producto Cat18 Modelo 04637 |          0 |           12
+ PROD-SKU-004677 | Producto Cat18 Modelo 04677 |          2 |           21
+ PROD-SKU-004717 | Producto Cat18 Modelo 04717 |          5 |           11
+ PROD-SKU-004757 | Producto Cat18 Modelo 04757 |          7 |           18
+ PROD-SKU-004797 | Producto Cat18 Modelo 04797 |          4 |           12
+ PROD-SKU-004837 | Producto Cat18 Modelo 04837 |          9 |           13
+ PROD-SKU-004877 | Producto Cat18 Modelo 04877 |          8 |           17
+ PROD-SKU-004917 | Producto Cat18 Modelo 04917 |          3 |           13
+ PROD-SKU-004957 | Producto Cat18 Modelo 04957 |          5 |           19
+ PROD-SKU-004997 | Producto Cat18 Modelo 04997 |          3 |           13
+ PROD-SKU-003578 | Producto Cat19 Modelo 03578 |         21 |           21
+ PROD-SKU-003858 | Producto Cat19 Modelo 03858 |         22 |           22
+ PROD-SKU-000021 | Producto Cat2 Modelo 00021  |          9 |           12
+ PROD-SKU-000061 | Producto Cat2 Modelo 00061  |          4 |           13
+ PROD-SKU-000101 | Producto Cat2 Modelo 00101  |          0 |           20
+ PROD-SKU-000141 | Producto Cat2 Modelo 00141  |          9 |           13
+ PROD-SKU-000181 | Producto Cat2 Modelo 00181  |          4 |           24
+ PROD-SKU-000221 | Producto Cat2 Modelo 00221  |          3 |           11
+ PROD-SKU-000261 | Producto Cat2 Modelo 00261  |          2 |           12
+ PROD-SKU-000301 | Producto Cat2 Modelo 00301  |          9 |           12
+ PROD-SKU-000341 | Producto Cat2 Modelo 00341  |          0 |           13
+ PROD-SKU-000381 | Producto Cat2 Modelo 00381  |          1 |           17
+ PROD-SKU-000421 | Producto Cat2 Modelo 00421  |          5 |           10
+ PROD-SKU-000461 | Producto Cat2 Modelo 00461  |          0 |           11
+ PROD-SKU-000501 | Producto Cat2 Modelo 00501  |          2 |           18
+ PROD-SKU-000541 | Producto Cat2 Modelo 00541  |          4 |           11
+ PROD-SKU-000581 | Producto Cat2 Modelo 00581  |          9 |           24
+ PROD-SKU-000621 | Producto Cat2 Modelo 00621  |          9 |           20
+ PROD-SKU-000661 | Producto Cat2 Modelo 00661  |          0 |           11
+ PROD-SKU-000701 | Producto Cat2 Modelo 00701  |          1 |           19
+ PROD-SKU-000741 | Producto Cat2 Modelo 00741  |          2 |           21
+ PROD-SKU-000781 | Producto Cat2 Modelo 00781  |          4 |           13
+ PROD-SKU-000821 | Producto Cat2 Modelo 00821  |          2 |           18
+ PROD-SKU-000861 | Producto Cat2 Modelo 00861  |          7 |           14
+ PROD-SKU-000901 | Producto Cat2 Modelo 00901  |          6 |           21
+ PROD-SKU-000941 | Producto Cat2 Modelo 00941  |          7 |           12
+ PROD-SKU-000981 | Producto Cat2 Modelo 00981  |          1 |           24
+ PROD-SKU-001021 | Producto Cat2 Modelo 01021  |          9 |           22
+ PROD-SKU-001061 | Producto Cat2 Modelo 01061  |          9 |           12
+ PROD-SKU-001101 | Producto Cat2 Modelo 01101  |          8 |           20
+ PROD-SKU-001141 | Producto Cat2 Modelo 01141  |          9 |           21
+ PROD-SKU-001181 | Producto Cat2 Modelo 01181  |          3 |           22
+ PROD-SKU-001221 | Producto Cat2 Modelo 01221  |          4 |           12
+ PROD-SKU-001261 | Producto Cat2 Modelo 01261  |          5 |           19
+ PROD-SKU-001301 | Producto Cat2 Modelo 01301  |          2 |           13
+ PROD-SKU-001341 | Producto Cat2 Modelo 01341  |          3 |           22
+ PROD-SKU-001381 | Producto Cat2 Modelo 01381  |          6 |           24
+ PROD-SKU-001421 | Producto Cat2 Modelo 01421  |          2 |           15
+ PROD-SKU-001461 | Producto Cat2 Modelo 01461  |          3 |           22
+ PROD-SKU-001501 | Producto Cat2 Modelo 01501  |          8 |           19
+ PROD-SKU-001541 | Producto Cat2 Modelo 01541  |          8 |           19
+ PROD-SKU-001581 | Producto Cat2 Modelo 01581  |          5 |           12
+ PROD-SKU-001621 | Producto Cat2 Modelo 01621  |          3 |           22
+ PROD-SKU-001661 | Producto Cat2 Modelo 01661  |          1 |           14
+ PROD-SKU-001681 | Producto Cat2 Modelo 01681  |         22 |           22
+ PROD-SKU-001701 | Producto Cat2 Modelo 01701  |          4 |           13
+ PROD-SKU-001741 | Producto Cat2 Modelo 01741  |          4 |           12
+ PROD-SKU-001781 | Producto Cat2 Modelo 01781  |          1 |           22
+ PROD-SKU-001821 | Producto Cat2 Modelo 01821  |          3 |           11
+ PROD-SKU-001861 | Producto Cat2 Modelo 01861  |          0 |           11
+ PROD-SKU-001901 | Producto Cat2 Modelo 01901  |          2 |           18
+ PROD-SKU-001941 | Producto Cat2 Modelo 01941  |          7 |           19
+ PROD-SKU-001981 | Producto Cat2 Modelo 01981  |          8 |           18
+ PROD-SKU-002021 | Producto Cat2 Modelo 02021  |          4 |           10
+ PROD-SKU-002061 | Producto Cat2 Modelo 02061  |          8 |           24
+ PROD-SKU-002101 | Producto Cat2 Modelo 02101  |          2 |           18
+ PROD-SKU-002141 | Producto Cat2 Modelo 02141  |          0 |           15
+ PROD-SKU-002181 | Producto Cat2 Modelo 02181  |          7 |           13
+ PROD-SKU-002221 | Producto Cat2 Modelo 02221  |          4 |           22
+ PROD-SKU-002261 | Producto Cat2 Modelo 02261  |          6 |           19
+ PROD-SKU-002301 | Producto Cat2 Modelo 02301  |          6 |           22
+ PROD-SKU-002341 | Producto Cat2 Modelo 02341  |          2 |           22
+ PROD-SKU-002381 | Producto Cat2 Modelo 02381  |          9 |           21
+ PROD-SKU-002421 | Producto Cat2 Modelo 02421  |          2 |           22
+ PROD-SKU-002461 | Producto Cat2 Modelo 02461  |          0 |           22
+ PROD-SKU-002501 | Producto Cat2 Modelo 02501  |          8 |           10
+ PROD-SKU-002541 | Producto Cat2 Modelo 02541  |          3 |           23
+ PROD-SKU-002581 | Producto Cat2 Modelo 02581  |          4 |           19
+ PROD-SKU-002621 | Producto Cat2 Modelo 02621  |          0 |           17
+ PROD-SKU-002661 | Producto Cat2 Modelo 02661  |          1 |           17
+ PROD-SKU-002701 | Producto Cat2 Modelo 02701  |          8 |           17
+ PROD-SKU-002741 | Producto Cat2 Modelo 02741  |          1 |           17
+ PROD-SKU-002781 | Producto Cat2 Modelo 02781  |          1 |           24
+ PROD-SKU-002821 | Producto Cat2 Modelo 02821  |          9 |           14
+ PROD-SKU-002861 | Producto Cat2 Modelo 02861  |          1 |           13
+ PROD-SKU-002901 | Producto Cat2 Modelo 02901  |          2 |           14
+ PROD-SKU-002941 | Producto Cat2 Modelo 02941  |          5 |           13
+ PROD-SKU-002981 | Producto Cat2 Modelo 02981  |          0 |           12
+ PROD-SKU-003021 | Producto Cat2 Modelo 03021  |          5 |           10
+ PROD-SKU-003061 | Producto Cat2 Modelo 03061  |          7 |           12
+ PROD-SKU-003101 | Producto Cat2 Modelo 03101  |          9 |           21
+ PROD-SKU-003141 | Producto Cat2 Modelo 03141  |          7 |           15
+ PROD-SKU-003181 | Producto Cat2 Modelo 03181  |          9 |           12
+ PROD-SKU-003221 | Producto Cat2 Modelo 03221  |          4 |           21
+ PROD-SKU-003261 | Producto Cat2 Modelo 03261  |          3 |           22
+ PROD-SKU-003301 | Producto Cat2 Modelo 03301  |          7 |           19
+ PROD-SKU-003341 | Producto Cat2 Modelo 03341  |          3 |           24
+ PROD-SKU-003381 | Producto Cat2 Modelo 03381  |          7 |           20
+ PROD-SKU-003421 | Producto Cat2 Modelo 03421  |          0 |           21
+ PROD-SKU-003461 | Producto Cat2 Modelo 03461  |          5 |           13
+ PROD-SKU-003501 | Producto Cat2 Modelo 03501  |          8 |           23
+ PROD-SKU-003541 | Producto Cat2 Modelo 03541  |          7 |           16
+ PROD-SKU-003581 | Producto Cat2 Modelo 03581  |          5 |           22
+ PROD-SKU-003621 | Producto Cat2 Modelo 03621  |          2 |           12
+ PROD-SKU-003661 | Producto Cat2 Modelo 03661  |          4 |           16
+ PROD-SKU-003701 | Producto Cat2 Modelo 03701  |          7 |           17
+ PROD-SKU-003741 | Producto Cat2 Modelo 03741  |          8 |           18
+ PROD-SKU-003781 | Producto Cat2 Modelo 03781  |          6 |           19
+ PROD-SKU-003821 | Producto Cat2 Modelo 03821  |          0 |           10
+ PROD-SKU-003861 | Producto Cat2 Modelo 03861  |          4 |           21
+ PROD-SKU-003901 | Producto Cat2 Modelo 03901  |          8 |           18
+ PROD-SKU-003941 | Producto Cat2 Modelo 03941  |          4 |           13
+ PROD-SKU-003981 | Producto Cat2 Modelo 03981  |          3 |           22
+ PROD-SKU-004021 | Producto Cat2 Modelo 04021  |          9 |           13
+ PROD-SKU-004061 | Producto Cat2 Modelo 04061  |          7 |           22
+ PROD-SKU-004101 | Producto Cat2 Modelo 04101  |          6 |           18
+ PROD-SKU-004141 | Producto Cat2 Modelo 04141  |          5 |           12
+ PROD-SKU-004181 | Producto Cat2 Modelo 04181  |          3 |           20
+ PROD-SKU-004221 | Producto Cat2 Modelo 04221  |          8 |           20
+ PROD-SKU-004261 | Producto Cat2 Modelo 04261  |          7 |           12
+ PROD-SKU-004301 | Producto Cat2 Modelo 04301  |          7 |           10
+ PROD-SKU-004341 | Producto Cat2 Modelo 04341  |          1 |           12
+ PROD-SKU-004381 | Producto Cat2 Modelo 04381  |          2 |           19
+ PROD-SKU-004421 | Producto Cat2 Modelo 04421  |          1 |           14
+ PROD-SKU-004461 | Producto Cat2 Modelo 04461  |          9 |           17
+ PROD-SKU-004501 | Producto Cat2 Modelo 04501  |          7 |           19
+ PROD-SKU-004541 | Producto Cat2 Modelo 04541  |          5 |           24
+ PROD-SKU-004581 | Producto Cat2 Modelo 04581  |          1 |           24
+ PROD-SKU-004621 | Producto Cat2 Modelo 04621  |          9 |           10
+ PROD-SKU-004661 | Producto Cat2 Modelo 04661  |          4 |           10
+ PROD-SKU-004701 | Producto Cat2 Modelo 04701  |          0 |           11
+ PROD-SKU-004741 | Producto Cat2 Modelo 04741  |          9 |           15
+ PROD-SKU-004781 | Producto Cat2 Modelo 04781  |          3 |           20
+ PROD-SKU-004821 | Producto Cat2 Modelo 04821  |          1 |           17
+ PROD-SKU-004861 | Producto Cat2 Modelo 04861  |          3 |           24
+ PROD-SKU-004901 | Producto Cat2 Modelo 04901  |          5 |           20
+ PROD-SKU-004941 | Producto Cat2 Modelo 04941  |          2 |           11
+ PROD-SKU-004981 | Producto Cat2 Modelo 04981  |          9 |           24
+ PROD-SKU-000005 | Producto Cat6 Modelo 00005  |          0 |           18
+ PROD-SKU-000045 | Producto Cat6 Modelo 00045  |          6 |           17
+ PROD-SKU-000085 | Producto Cat6 Modelo 00085  |          6 |           18
+ PROD-SKU-000125 | Producto Cat6 Modelo 00125  |          3 |           14
+ PROD-SKU-000165 | Producto Cat6 Modelo 00165  |          4 |           22
+ PROD-SKU-000205 | Producto Cat6 Modelo 00205  |          7 |           21
+ PROD-SKU-000245 | Producto Cat6 Modelo 00245  |          3 |           24
+ PROD-SKU-000285 | Producto Cat6 Modelo 00285  |          3 |           12
+ PROD-SKU-000325 | Producto Cat6 Modelo 00325  |          6 |           21
+ PROD-SKU-000365 | Producto Cat6 Modelo 00365  |          9 |           13
+ PROD-SKU-000405 | Producto Cat6 Modelo 00405  |          1 |           21
+ PROD-SKU-000445 | Producto Cat6 Modelo 00445  |          7 |           15
+ PROD-SKU-000485 | Producto Cat6 Modelo 00485  |          4 |           22
+ PROD-SKU-000525 | Producto Cat6 Modelo 00525  |          9 |           14
+ PROD-SKU-000565 | Producto Cat6 Modelo 00565  |          3 |           18
+ PROD-SKU-000605 | Producto Cat6 Modelo 00605  |          0 |           23
+ PROD-SKU-000645 | Producto Cat6 Modelo 00645  |          6 |           24
+ PROD-SKU-000685 | Producto Cat6 Modelo 00685  |          4 |           24
+ PROD-SKU-000725 | Producto Cat6 Modelo 00725  |          0 |           16
+ PROD-SKU-000765 | Producto Cat6 Modelo 00765  |          0 |           18
+ PROD-SKU-000805 | Producto Cat6 Modelo 00805  |          6 |           13
+ PROD-SKU-000845 | Producto Cat6 Modelo 00845  |          4 |           10
+ PROD-SKU-000885 | Producto Cat6 Modelo 00885  |          3 |           11
+ PROD-SKU-000925 | Producto Cat6 Modelo 00925  |          3 |           11
+ PROD-SKU-000965 | Producto Cat6 Modelo 00965  |          5 |           12
+ PROD-SKU-001005 | Producto Cat6 Modelo 01005  |          9 |           10
+ PROD-SKU-001045 | Producto Cat6 Modelo 01045  |          8 |           14
+ PROD-SKU-001085 | Producto Cat6 Modelo 01085  |          1 |           22
+ PROD-SKU-001125 | Producto Cat6 Modelo 01125  |          2 |           14
+ PROD-SKU-001165 | Producto Cat6 Modelo 01165  |          7 |           21
+ PROD-SKU-001205 | Producto Cat6 Modelo 01205  |          7 |           20
+ PROD-SKU-001245 | Producto Cat6 Modelo 01245  |          7 |           19
+ PROD-SKU-001285 | Producto Cat6 Modelo 01285  |          1 |           18
+ PROD-SKU-001325 | Producto Cat6 Modelo 01325  |          8 |           17
+ PROD-SKU-001365 | Producto Cat6 Modelo 01365  |          8 |           12
+ PROD-SKU-001405 | Producto Cat6 Modelo 01405  |          5 |           10
+ PROD-SKU-001445 | Producto Cat6 Modelo 01445  |          2 |           13
+ PROD-SKU-001485 | Producto Cat6 Modelo 01485  |          9 |           12
+ PROD-SKU-001525 | Producto Cat6 Modelo 01525  |          9 |           22
+ PROD-SKU-001565 | Producto Cat6 Modelo 01565  |          4 |           24
+ PROD-SKU-001605 | Producto Cat6 Modelo 01605  |          3 |           19
+ PROD-SKU-001645 | Producto Cat6 Modelo 01645  |          9 |           23
+ PROD-SKU-001685 | Producto Cat6 Modelo 01685  |          3 |           19
+ PROD-SKU-001725 | Producto Cat6 Modelo 01725  |          4 |           16
+ PROD-SKU-001765 | Producto Cat6 Modelo 01765  |          8 |           23
+ PROD-SKU-001805 | Producto Cat6 Modelo 01805  |          7 |           19
+ PROD-SKU-001845 | Producto Cat6 Modelo 01845  |          4 |           20
+ PROD-SKU-001885 | Producto Cat6 Modelo 01885  |          7 |           15
+ PROD-SKU-001925 | Producto Cat6 Modelo 01925  |          0 |           10
+ PROD-SKU-001965 | Producto Cat6 Modelo 01965  |          5 |           19
+ PROD-SKU-002005 | Producto Cat6 Modelo 02005  |          3 |           21
+ PROD-SKU-002045 | Producto Cat6 Modelo 02045  |          4 |           22
+ PROD-SKU-002085 | Producto Cat6 Modelo 02085  |          9 |           19
+ PROD-SKU-002125 | Producto Cat6 Modelo 02125  |          6 |           11
+ PROD-SKU-002165 | Producto Cat6 Modelo 02165  |          0 |           24
+ PROD-SKU-002205 | Producto Cat6 Modelo 02205  |          3 |           24
+ PROD-SKU-002245 | Producto Cat6 Modelo 02245  |          3 |           21
+ PROD-SKU-002285 | Producto Cat6 Modelo 02285  |          5 |           24
+ PROD-SKU-002325 | Producto Cat6 Modelo 02325  |          1 |           20
+ PROD-SKU-002365 | Producto Cat6 Modelo 02365  |          2 |           15
+ PROD-SKU-002405 | Producto Cat6 Modelo 02405  |          4 |           17
+ PROD-SKU-002445 | Producto Cat6 Modelo 02445  |          5 |           24
+ PROD-SKU-002485 | Producto Cat6 Modelo 02485  |          1 |           23
+ PROD-SKU-002525 | Producto Cat6 Modelo 02525  |          7 |           16
+ PROD-SKU-002565 | Producto Cat6 Modelo 02565  |          7 |           11
+ PROD-SKU-002605 | Producto Cat6 Modelo 02605  |          6 |           19
+ PROD-SKU-002645 | Producto Cat6 Modelo 02645  |          6 |           11
+ PROD-SKU-002685 | Producto Cat6 Modelo 02685  |          5 |           22
+ PROD-SKU-002725 | Producto Cat6 Modelo 02725  |          2 |           23
+ PROD-SKU-002765 | Producto Cat6 Modelo 02765  |          8 |           20
+ PROD-SKU-002805 | Producto Cat6 Modelo 02805  |          6 |           14
+ PROD-SKU-002845 | Producto Cat6 Modelo 02845  |          6 |           13
+ PROD-SKU-002885 | Producto Cat6 Modelo 02885  |          6 |           22
+ PROD-SKU-002925 | Producto Cat6 Modelo 02925  |          1 |           16
+ PROD-SKU-002965 | Producto Cat6 Modelo 02965  |          8 |           16
+ PROD-SKU-003005 | Producto Cat6 Modelo 03005  |          5 |           20
+ PROD-SKU-003045 | Producto Cat6 Modelo 03045  |          3 |           16
+ PROD-SKU-003085 | Producto Cat6 Modelo 03085  |          1 |           21
+ PROD-SKU-003125 | Producto Cat6 Modelo 03125  |          0 |           17
+ PROD-SKU-003165 | Producto Cat6 Modelo 03165  |          4 |           19
+ PROD-SKU-003205 | Producto Cat6 Modelo 03205  |          6 |           14
+ PROD-SKU-003245 | Producto Cat6 Modelo 03245  |          7 |           19
+ PROD-SKU-003285 | Producto Cat6 Modelo 03285  |          3 |           16
+ PROD-SKU-003325 | Producto Cat6 Modelo 03325  |          6 |           12
+ PROD-SKU-003365 | Producto Cat6 Modelo 03365  |          1 |           12
+ PROD-SKU-003405 | Producto Cat6 Modelo 03405  |          8 |           11
+ PROD-SKU-003445 | Producto Cat6 Modelo 03445  |          1 |           10
+ PROD-SKU-003485 | Producto Cat6 Modelo 03485  |          6 |           11
+ PROD-SKU-003525 | Producto Cat6 Modelo 03525  |          1 |           13
+ PROD-SKU-003565 | Producto Cat6 Modelo 03565  |          7 |           19
+ PROD-SKU-003605 | Producto Cat6 Modelo 03605  |          6 |           16
+ PROD-SKU-003645 | Producto Cat6 Modelo 03645  |          1 |           24
+ PROD-SKU-003685 | Producto Cat6 Modelo 03685  |          8 |           18
+ PROD-SKU-003725 | Producto Cat6 Modelo 03725  |          9 |           22
+ PROD-SKU-003765 | Producto Cat6 Modelo 03765  |          3 |           13
+ PROD-SKU-003805 | Producto Cat6 Modelo 03805  |          1 |           13
+ PROD-SKU-003845 | Producto Cat6 Modelo 03845  |          8 |           22
+ PROD-SKU-003885 | Producto Cat6 Modelo 03885  |          3 |           20
+ PROD-SKU-003925 | Producto Cat6 Modelo 03925  |          8 |           19
+ PROD-SKU-003965 | Producto Cat6 Modelo 03965  |          6 |           18
+ PROD-SKU-004005 | Producto Cat6 Modelo 04005  |          0 |           20
+ PROD-SKU-004045 | Producto Cat6 Modelo 04045  |          5 |           18
+ PROD-SKU-004085 | Producto Cat6 Modelo 04085  |          2 |           13
+ PROD-SKU-004125 | Producto Cat6 Modelo 04125  |          8 |           17
+ PROD-SKU-004165 | Producto Cat6 Modelo 04165  |          3 |           12
+ PROD-SKU-004205 | Producto Cat6 Modelo 04205  |          2 |           13
+ PROD-SKU-004245 | Producto Cat6 Modelo 04245  |          1 |           13
+ PROD-SKU-004285 | Producto Cat6 Modelo 04285  |          2 |           12
+ PROD-SKU-004325 | Producto Cat6 Modelo 04325  |          3 |           13
+ PROD-SKU-004365 | Producto Cat6 Modelo 04365  |          7 |           10
+ PROD-SKU-004405 | Producto Cat6 Modelo 04405  |          7 |           10
+ PROD-SKU-004445 | Producto Cat6 Modelo 04445  |          5 |           11
+ PROD-SKU-004485 | Producto Cat6 Modelo 04485  |          9 |           17
+ PROD-SKU-004525 | Producto Cat6 Modelo 04525  |          0 |           19
+ PROD-SKU-004565 | Producto Cat6 Modelo 04565  |          6 |           11
+ PROD-SKU-004605 | Producto Cat6 Modelo 04605  |          5 |           21
+ PROD-SKU-004645 | Producto Cat6 Modelo 04645  |          2 |           22
+ PROD-SKU-004685 | Producto Cat6 Modelo 04685  |          7 |           17
+ PROD-SKU-004725 | Producto Cat6 Modelo 04725  |          8 |           23
+ PROD-SKU-004765 | Producto Cat6 Modelo 04765  |          6 |           17
+ PROD-SKU-004805 | Producto Cat6 Modelo 04805  |          0 |           11
+ PROD-SKU-004845 | Producto Cat6 Modelo 04845  |          1 |           12
+ PROD-SKU-004885 | Producto Cat6 Modelo 04885  |          9 |           12
+ PROD-SKU-004925 | Producto Cat6 Modelo 04925  |          3 |           17
+ PROD-SKU-004965 | Producto Cat6 Modelo 04965  |          3 |           22
+ PROD-SKU-002467 | Producto Cat8 Modelo 02467  |         20 |           22
+ PROD-SKU-000448 | Producto Cat9 Modelo 00448  |         23 |           23
+ PROD-SKU-000848 | Producto Cat9 Modelo 00848  |         23 |           23
+(639 filas)
+
+           fecha            |  tipo   | cantidad |     referencia     
+----------------------------+---------+----------+--------------------
+ 2027-01-12 09:45:54.839815 | ENTRADA |       15 | MOV-SUC3-P125-0150
+ 2027-01-10 21:22:05.049003 | AJUSTE  |       15 | MOV-SUC3-P125-0149
+ 2027-01-09 09:13:58.060707 | SALIDA  |        5 | MOV-SUC3-P125-0148
+ 2027-01-07 21:17:44.001384 | ENTRADA |       19 | MOV-SUC3-P125-0147
+ 2027-01-06 09:36:10.675754 | AJUSTE  |        9 | MOV-SUC3-P125-0146
+ 2027-01-04 21:24:53.410461 | SALIDA  |       10 | MOV-SUC3-P125-0145
+ 2027-01-03 09:51:10.505839 | ENTRADA |        1 | MOV-SUC3-P125-0144
+ 2027-01-01 21:23:36.164709 | AJUSTE  |        3 | MOV-SUC3-P125-0143
+ 2026-12-31 09:03:32.383451 | SALIDA  |       13 | MOV-SUC3-P125-0142
+ 2026-12-29 21:23:08.502572 | ENTRADA |        8 | MOV-SUC3-P125-0141
+ 2026-12-28 09:37:13.482761 | AJUSTE  |       20 | MOV-SUC3-P125-0140
+ 2026-12-26 21:33:13.859061 | SALIDA  |       14 | MOV-SUC3-P125-0139
+ 2026-12-25 09:04:10.084173 | ENTRADA |       15 | MOV-SUC3-P125-0138
+ 2026-12-23 21:56:05.989317 | AJUSTE  |       20 | MOV-SUC3-P125-0137
+ 2026-12-22 09:41:12.421713 | SALIDA  |       16 | MOV-SUC3-P125-0136
+ 2026-12-20 21:41:20.346432 | ENTRADA |       14 | MOV-SUC3-P125-0135
+ 2026-12-19 09:05:01.56391  | AJUSTE  |        8 | MOV-SUC3-P125-0134
+ 2026-12-17 21:25:56.341768 | SALIDA  |       19 | MOV-SUC3-P125-0133
+ 2026-12-16 09:36:09.579052 | ENTRADA |       19 | MOV-SUC3-P125-0132
+ 2026-12-14 21:15:19.871863 | AJUSTE  |        8 | MOV-SUC3-P125-0131
+ 2026-12-13 09:30:17.791709 | SALIDA  |       20 | MOV-SUC3-P125-0130
+ 2026-12-11 21:10:32.424446 | ENTRADA |       16 | MOV-SUC3-P125-0129
+ 2026-12-10 09:21:49.537087 | AJUSTE  |        6 | MOV-SUC3-P125-0128
+ 2026-12-08 21:48:34.01248  | SALIDA  |       15 | MOV-SUC3-P125-0127
+ 2026-12-07 09:30:31.658649 | ENTRADA |       14 | MOV-SUC3-P125-0126
+ 2026-12-05 21:45:19.758934 | AJUSTE  |       10 | MOV-SUC3-P125-0125
+ 2026-12-04 09:08:23.566825 | SALIDA  |        8 | MOV-SUC3-P125-0124
+ 2026-12-02 21:55:37.957884 | ENTRADA |       10 | MOV-SUC3-P125-0123
+ 2026-12-01 09:15:26.320276 | AJUSTE  |       13 | MOV-SUC3-P125-0122
+ 2026-11-29 21:32:07.985268 | SALIDA  |        1 | MOV-SUC3-P125-0121
+ 2026-11-28 09:27:52.454947 | ENTRADA |       17 | MOV-SUC3-P125-0120
+ 2026-11-26 21:39:39.13103  | AJUSTE  |        4 | MOV-SUC3-P125-0119
+ 2026-11-25 09:26:16.570695 | SALIDA  |        4 | MOV-SUC3-P125-0118
+ 2026-11-23 21:11:37.539237 | ENTRADA |       17 | MOV-SUC3-P125-0117
+ 2026-11-22 09:19:49.687081 | AJUSTE  |       15 | MOV-SUC3-P125-0116
+ 2026-11-20 21:27:58.128132 | SALIDA  |        5 | MOV-SUC3-P125-0115
+ 2026-11-19 09:06:59.78827  | ENTRADA |        3 | MOV-SUC3-P125-0114
+ 2026-11-17 21:42:57.594194 | AJUSTE  |       20 | MOV-SUC3-P125-0113
+ 2026-11-16 09:03:42.865259 | SALIDA  |       16 | MOV-SUC3-P125-0112
+ 2026-11-14 21:55:51.218543 | ENTRADA |        5 | MOV-SUC3-P125-0111
+ 2026-11-13 09:57:08.917758 | AJUSTE  |        4 | MOV-SUC3-P125-0110
+ 2026-11-11 21:12:33.26803  | SALIDA  |       20 | MOV-SUC3-P125-0109
+ 2026-11-10 09:48:52.476368 | ENTRADA |        7 | MOV-SUC3-P125-0108
+ 2026-11-08 21:52:49.002409 | AJUSTE  |       16 | MOV-SUC3-P125-0107
+ 2026-11-07 09:12:26.594851 | SALIDA  |        5 | MOV-SUC3-P125-0106
+ 2026-11-05 21:06:18.98217  | ENTRADA |        2 | MOV-SUC3-P125-0105
+ 2026-11-04 09:11:49.467642 | AJUSTE  |        8 | MOV-SUC3-P125-0104
+ 2026-11-02 21:06:43.458084 | SALIDA  |        6 | MOV-SUC3-P125-0103
+ 2026-11-01 09:03:54.772483 | ENTRADA |       15 | MOV-SUC3-P125-0102
+ 2026-10-30 21:53:11.040497 | AJUSTE  |        3 | MOV-SUC3-P125-0101
+(50 filas)
+
+    dia     | numero_ventas | total_vendido 
+------------+---------------+---------------
+ 2026-10-01 |            77 |     256694.06
+ 2026-10-02 |            83 |     272797.15
+ 2026-10-03 |            83 |     292871.54
+ 2026-10-04 |            81 |     271601.17
+ 2026-10-05 |            75 |     237914.75
+ 2026-10-06 |            79 |     272313.03
+ 2026-10-07 |            78 |     280595.88
+ 2026-10-08 |            83 |     260491.64
+ 2026-10-09 |            76 |     254431.22
+ 2026-10-10 |            80 |     285715.78
+ 2026-10-11 |            78 |     271604.88
+ 2026-10-12 |            80 |     266481.06
+ 2026-10-13 |            78 |     276120.73
+ 2026-10-14 |            85 |     264291.92
+ 2026-10-15 |            73 |     217634.80
+ 2026-10-16 |            69 |     233329.07
+ 2026-10-17 |            80 |     250168.88
+ 2026-10-18 |            79 |     247066.88
+ 2026-10-19 |            79 |     275360.98
+ 2026-10-20 |            76 |     246024.21
+ 2026-10-21 |            74 |     241939.86
+ 2026-10-22 |            79 |     274550.72
+ 2026-10-23 |            73 |     250785.19
+ 2026-10-24 |            82 |     282088.98
+ 2026-10-25 |            75 |     248898.25
+ 2026-10-26 |            81 |     271589.20
+ 2026-10-27 |            78 |     267514.58
+ 2026-10-28 |            78 |     257078.58
+ 2026-10-29 |            79 |     227218.21
+ 2026-10-30 |            82 |     279102.88
+ 2026-10-31 |            79 |     251873.85
+(31 filas)
+

@@ -1,0 +1,66 @@
+﻿                                                                   QUERY PLAN                                                                    
+-------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=727.44..731.60 rows=1667 width=51) (actual time=2.446..2.465 rows=639 loops=1)
+   Sort Key: p.nombre
+   Sort Method: quicksort  Memory: 69kB
+   Buffers: shared hit=399
+   ->  Hash Join  (cost=513.09..638.23 rows=1667 width=51) (actual time=1.530..2.218 rows=639 loops=1)
+         Hash Cond: (p.id_producto = i.id_producto)
+         Buffers: shared hit=396
+         ->  Seq Scan on producto p  (cost=0.00..112.00 rows=5000 width=47) (actual time=0.011..0.353 rows=5000 loops=1)
+               Buffers: shared hit=62
+         ->  Hash  (cost=492.25..492.25 rows=1667 width=12) (actual time=1.504..1.505 rows=639 loops=1)
+               Buckets: 2048  Batches: 1  Memory Usage: 44kB
+               Buffers: shared hit=334
+               ->  Bitmap Heap Scan on inventario i  (cost=98.22..492.25 rows=1667 width=12) (actual time=0.220..1.421 rows=639 loops=1)
+                     Recheck Cond: (id_sucursal = 3)
+                     Filter: (existencia <= stock_minimo)
+                     Rows Removed by Filter: 4361
+                     Heap Blocks: exact=319
+                     Buffers: shared hit=334
+                     ->  Bitmap Index Scan on inventario_pkey  (cost=0.00..97.81 rows=5002 width=0) (actual time=0.185..0.185 rows=5000 loops=1)
+                           Index Cond: (id_sucursal = 3)
+                           Buffers: shared hit=15
+ Planning:
+   Buffers: shared hit=212
+ Planning Time: 3.172 ms
+ Execution Time: 2.552 ms
+(25 filas)
+
+                                                            QUERY PLAN                                                            
+----------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=3038.38..3038.42 rows=18 width=35) (actual time=8.332..8.337 rows=50 loops=1)
+   Buffers: shared hit=1241
+   ->  Sort  (cost=3038.38..3038.42 rows=18 width=35) (actual time=8.332..8.334 rows=50 loops=1)
+         Sort Key: fecha DESC
+         Sort Method: top-N heapsort  Memory: 32kB
+         Buffers: shared hit=1241
+         ->  Seq Scan on movimiento_inventario  (cost=0.00..3038.00 rows=18 width=35) (actual time=8.273..8.295 rows=150 loops=1)
+               Filter: ((id_sucursal = 3) AND (id_producto = 125))
+               Rows Removed by Filter: 119850
+               Buffers: shared hit=1238
+ Planning:
+   Buffers: shared hit=59
+ Planning Time: 0.987 ms
+ Execution Time: 8.351 ms
+(14 filas)
+
+                                                                                  QUERY PLAN                                                                                  
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ GroupAggregate  (cost=1724.91..1747.84 rows=917 width=44) (actual time=5.519..5.820 rows=31 loops=1)
+   Group Key: (date(fecha))
+   Buffers: shared hit=858
+   ->  Sort  (cost=1724.91..1727.20 rows=917 width=10) (actual time=5.489..5.556 rows=2432 loops=1)
+         Sort Key: (date(fecha))
+         Sort Method: quicksort  Memory: 173kB
+         Buffers: shared hit=858
+         ->  Seq Scan on venta  (cost=0.00..1679.79 rows=917 width=10) (actual time=2.261..5.259 rows=2432 loops=1)
+               Filter: ((fecha >= '2026-10-01 00:00:00'::timestamp without time zone) AND (fecha < '2026-11-01 00:00:00'::timestamp without time zone) AND (id_sucursal = 3))
+               Rows Removed by Filter: 44568
+               Buffers: shared hit=855
+ Planning:
+   Buffers: shared hit=55
+ Planning Time: 1.011 ms
+ Execution Time: 5.849 ms
+(15 filas)
+

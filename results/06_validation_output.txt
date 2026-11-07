@@ -1,0 +1,193 @@
+﻿ table_schema |      table_name       | table_type 
+--------------+-----------------------+------------
+ public       | categoria             | BASE TABLE
+ public       | compra                | BASE TABLE
+ public       | detalle_compra        | BASE TABLE
+ public       | detalle_venta         | BASE TABLE
+ public       | inventario            | BASE TABLE
+ public       | movimiento_inventario | BASE TABLE
+ public       | producto              | BASE TABLE
+ public       | producto_proveedor    | BASE TABLE
+ public       | proveedor             | BASE TABLE
+ public       | sucursal              | BASE TABLE
+ public       | venta                 | BASE TABLE
+(11 filas)
+
+         tabla         | total_registros 
+-----------------------+-----------------
+ movimiento_inventario |          120000
+ detalle_venta         |           86166
+ inventario            |           50000
+ venta                 |           47000
+ detalle_compra        |           27600
+ compra                |           12000
+ producto_proveedor    |           10000
+ producto              |            5000
+ proveedor             |             100
+ categoria             |              20
+ sucursal              |              10
+(11 filas)
+
+      table_name       |              constraint_name              | constraint_type 
+-----------------------+-------------------------------------------+-----------------
+ categoria             | 2200_49153_1_not_null                     | CHECK
+ categoria             | 2200_49153_2_not_null                     | CHECK
+ categoria             | categoria_pkey                            | PRIMARY KEY
+ categoria             | categoria_nombre_key                      | UNIQUE
+ compra                | 2200_49289_1_not_null                     | CHECK
+ compra                | 2200_49289_2_not_null                     | CHECK
+ compra                | 2200_49289_3_not_null                     | CHECK
+ compra                | 2200_49289_4_not_null                     | CHECK
+ compra                | 2200_49289_5_not_null                     | CHECK
+ compra                | 2200_49289_6_not_null                     | CHECK
+ compra                | compra_estado_check                       | CHECK
+ compra                | compra_total_check                        | CHECK
+ compra                | compra_id_proveedor_fkey                  | FOREIGN KEY
+ compra                | compra_id_sucursal_fkey                   | FOREIGN KEY
+ compra                | compra_pkey                               | PRIMARY KEY
+ detalle_compra        | 2200_49309_1_not_null                     | CHECK
+ detalle_compra        | 2200_49309_2_not_null                     | CHECK
+ detalle_compra        | 2200_49309_3_not_null                     | CHECK
+ detalle_compra        | 2200_49309_4_not_null                     | CHECK
+ detalle_compra        | 2200_49309_5_not_null                     | CHECK
+ detalle_compra        | 2200_49309_6_not_null                     | CHECK
+ detalle_compra        | detalle_compra_cantidad_check             | CHECK
+ detalle_compra        | detalle_compra_costo_unitario_check       | CHECK
+ detalle_compra        | detalle_compra_subtotal_check             | CHECK
+ detalle_compra        | detalle_compra_id_compra_fkey             | FOREIGN KEY
+ detalle_compra        | detalle_compra_id_producto_fkey           | FOREIGN KEY
+ detalle_compra        | detalle_compra_pkey                       | PRIMARY KEY
+ detalle_venta         | 2200_49269_1_not_null                     | CHECK
+ detalle_venta         | 2200_49269_2_not_null                     | CHECK
+ detalle_venta         | 2200_49269_3_not_null                     | CHECK
+ detalle_venta         | 2200_49269_4_not_null                     | CHECK
+ detalle_venta         | 2200_49269_5_not_null                     | CHECK
+ detalle_venta         | 2200_49269_6_not_null                     | CHECK
+ detalle_venta         | detalle_venta_cantidad_check              | CHECK
+ detalle_venta         | detalle_venta_precio_unitario_check       | CHECK
+ detalle_venta         | detalle_venta_subtotal_check              | CHECK
+ detalle_venta         | detalle_venta_id_producto_fkey            | FOREIGN KEY
+ detalle_venta         | detalle_venta_id_venta_fkey               | FOREIGN KEY
+ detalle_venta         | detalle_venta_pkey                        | PRIMARY KEY
+ inventario            | 2200_49214_1_not_null                     | CHECK
+ inventario            | 2200_49214_2_not_null                     | CHECK
+ inventario            | 2200_49214_3_not_null                     | CHECK
+ inventario            | 2200_49214_4_not_null                     | CHECK
+ inventario            | 2200_49214_5_not_null                     | CHECK
+ inventario            | inventario_existencia_check               | CHECK
+ inventario            | inventario_stock_minimo_check             | CHECK
+ inventario            | inventario_id_producto_fkey               | FOREIGN KEY
+ inventario            | inventario_id_sucursal_fkey               | FOREIGN KEY
+ inventario            | inventario_pkey                           | PRIMARY KEY
+ movimiento_inventario | 2200_49235_1_not_null                     | CHECK
+ movimiento_inventario | 2200_49235_2_not_null                     | CHECK
+ movimiento_inventario | 2200_49235_3_not_null                     | CHECK
+ movimiento_inventario | 2200_49235_4_not_null                     | CHECK
+ movimiento_inventario | 2200_49235_5_not_null                     | CHECK
+ movimiento_inventario | 2200_49235_6_not_null                     | CHECK
+ movimiento_inventario | movimiento_inventario_cantidad_check      | CHECK
+ movimiento_inventario | movimiento_inventario_tipo_check          | CHECK
+ movimiento_inventario | movimiento_inventario_id_producto_fkey    | FOREIGN KEY
+ movimiento_inventario | movimiento_inventario_id_sucursal_fkey    | FOREIGN KEY
+ movimiento_inventario | movimiento_inventario_pkey                | PRIMARY KEY
+ producto              | 2200_49164_1_not_null                     | CHECK
+ producto              | 2200_49164_2_not_null                     | CHECK
+ producto              | 2200_49164_3_not_null                     | CHECK
+ producto              | 2200_49164_4_not_null                     | CHECK
+ producto              | 2200_49164_5_not_null                     | CHECK
+ producto              | 2200_49164_6_not_null                     | CHECK
+ producto              | 2200_49164_7_not_null                     | CHECK
+ producto              | chk_producto_precios_coherentes           | CHECK
+ producto              | producto_precio_compra_check              | CHECK
+ producto              | producto_precio_venta_check               | CHECK
+ producto              | producto_id_categoria_fkey                | FOREIGN KEY
+ producto              | producto_pkey                             | PRIMARY KEY
+ producto              | producto_sku_key                          | UNIQUE
+ producto_proveedor    | 2200_49188_1_not_null                     | CHECK
+ producto_proveedor    | 2200_49188_2_not_null                     | CHECK
+ producto_proveedor    | 2200_49188_3_not_null                     | CHECK
+ producto_proveedor    | producto_proveedor_costo_referencia_check | CHECK
+ producto_proveedor    | producto_proveedor_id_producto_fkey       | FOREIGN KEY
+ producto_proveedor    | producto_proveedor_id_proveedor_fkey      | FOREIGN KEY
+ producto_proveedor    | producto_proveedor_pkey                   | PRIMARY KEY
+ proveedor             | 2200_49182_1_not_null                     | CHECK
+ proveedor             | 2200_49182_2_not_null                     | CHECK
+ proveedor             | proveedor_pkey                            | PRIMARY KEY
+ sucursal              | 2200_49205_1_not_null                     | CHECK
+ sucursal              | 2200_49205_2_not_null                     | CHECK
+ sucursal              | 2200_49205_3_not_null                     | CHECK
+ sucursal              | 2200_49205_4_not_null                     | CHECK
+ sucursal              | sucursal_pkey                             | PRIMARY KEY
+ venta                 | 2200_49255_1_not_null                     | CHECK
+ venta                 | 2200_49255_2_not_null                     | CHECK
+ venta                 | 2200_49255_3_not_null                     | CHECK
+ venta                 | 2200_49255_4_not_null                     | CHECK
+ venta                 | 2200_49255_5_not_null                     | CHECK
+ venta                 | venta_total_check                         | CHECK
+ venta                 | venta_id_sucursal_fkey                    | FOREIGN KEY
+ venta                 | venta_pkey                                | PRIMARY KEY
+(96 filas)
+
+     tabla_origen      | columna_origen | tabla_destino | columna_destino | update_rule | delete_rule 
+-----------------------+----------------+---------------+-----------------+-------------+-------------
+ compra                | id_proveedor   | proveedor     | id_proveedor    | NO ACTION   | RESTRICT
+ compra                | id_sucursal    | sucursal      | id_sucursal     | NO ACTION   | RESTRICT
+ detalle_compra        | id_compra      | compra        | id_compra       | NO ACTION   | CASCADE
+ detalle_compra        | id_producto    | producto      | id_producto     | NO ACTION   | RESTRICT
+ detalle_venta         | id_producto    | producto      | id_producto     | NO ACTION   | RESTRICT
+ detalle_venta         | id_venta       | venta         | id_venta        | NO ACTION   | CASCADE
+ inventario            | id_producto    | producto      | id_producto     | NO ACTION   | RESTRICT
+ inventario            | id_sucursal    | sucursal      | id_sucursal     | NO ACTION   | RESTRICT
+ movimiento_inventario | id_producto    | producto      | id_producto     | NO ACTION   | RESTRICT
+ movimiento_inventario | id_sucursal    | sucursal      | id_sucursal     | NO ACTION   | RESTRICT
+ producto              | id_categoria   | categoria     | id_categoria    | NO ACTION   | RESTRICT
+ producto_proveedor    | id_producto    | producto      | id_producto     | NO ACTION   | CASCADE
+ producto_proveedor    | id_proveedor   | proveedor     | id_proveedor    | NO ACTION   | RESTRICT
+ venta                 | id_sucursal    | sucursal      | id_sucursal     | NO ACTION   | RESTRICT
+(14 filas)
+
+ schemaname |       tablename       |               indexname                |                                                                indexdef                                                                | tamano_indice 
+------------+-----------------------+----------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+---------------
+ public     | categoria             | categoria_nombre_key                   | CREATE UNIQUE INDEX categoria_nombre_key ON public.categoria USING btree (nombre)                                                      | 16 kB
+ public     | categoria             | categoria_pkey                         | CREATE UNIQUE INDEX categoria_pkey ON public.categoria USING btree (id_categoria)                                                      | 16 kB
+ public     | compra                | compra_pkey                            | CREATE UNIQUE INDEX compra_pkey ON public.compra USING btree (id_compra)                                                               | 552 kB
+ public     | detalle_compra        | detalle_compra_pkey                    | CREATE UNIQUE INDEX detalle_compra_pkey ON public.detalle_compra USING btree (id_detalle_compra)                                       | 624 kB
+ public     | detalle_venta         | detalle_venta_pkey                     | CREATE UNIQUE INDEX detalle_venta_pkey ON public.detalle_venta USING btree (id_detalle_venta)                                          | 1904 kB
+ public     | inventario            | idx_inventario_stock_bajo              | CREATE INDEX idx_inventario_stock_bajo ON public.inventario USING btree (id_sucursal, id_producto) WHERE (existencia <= stock_minimo)  | 160 kB
+ public     | inventario            | inventario_pkey                        | CREATE UNIQUE INDEX inventario_pkey ON public.inventario USING btree (id_sucursal, id_producto)                                        | 1136 kB
+ public     | movimiento_inventario | idx_movimiento_sucursal_producto_fecha | CREATE INDEX idx_movimiento_sucursal_producto_fecha ON public.movimiento_inventario USING btree (id_sucursal, id_producto, fecha DESC) | 3720 kB
+ public     | movimiento_inventario | movimiento_inventario_pkey             | CREATE UNIQUE INDEX movimiento_inventario_pkey ON public.movimiento_inventario USING btree (id_movimiento)                             | 2640 kB
+ public     | producto              | producto_pkey                          | CREATE UNIQUE INDEX producto_pkey ON public.producto USING btree (id_producto)                                                         | 128 kB
+ public     | producto              | producto_sku_key                       | CREATE UNIQUE INDEX producto_sku_key ON public.producto USING btree (sku)                                                              | 176 kB
+ public     | producto_proveedor    | producto_proveedor_pkey                | CREATE UNIQUE INDEX producto_proveedor_pkey ON public.producto_proveedor USING btree (id_producto, id_proveedor)                       | 344 kB
+ public     | proveedor             | proveedor_pkey                         | CREATE UNIQUE INDEX proveedor_pkey ON public.proveedor USING btree (id_proveedor)                                                      | 16 kB
+ public     | sucursal              | sucursal_pkey                          | CREATE UNIQUE INDEX sucursal_pkey ON public.sucursal USING btree (id_sucursal)                                                         | 16 kB
+ public     | venta                 | idx_venta_sucursal_fecha               | CREATE INDEX idx_venta_sucursal_fecha ON public.venta USING btree (id_sucursal, fecha DESC)                                            | 1464 kB
+ public     | venta                 | venta_pkey                             | CREATE UNIQUE INDEX venta_pkey ON public.venta USING btree (id_venta)                                                                  | 2072 kB
+(16 filas)
+
+ productos_huerfanos_categoria 
+-------------------------------
+                             0
+(1 fila)
+
+ inventarios_negativos 
+-----------------------
+                     0
+(1 fila)
+
+ productos_precio_invalido 
+---------------------------
+                         0
+(1 fila)
+
+ detalles_venta_incoherentes 
+-----------------------------
+                           0
+(1 fila)
+
+ ventas_total_descuadrado 
+--------------------------
+                        0
+(1 fila)
+

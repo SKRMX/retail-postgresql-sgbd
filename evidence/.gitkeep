@@ -1,0 +1,13 @@
+# Carpeta destinada al almacenamiento de capturas de pantalla de pgAdmin 4:
+# 1. Base retail_inventory_db y dashboard
+# 2. Árbol de tablas
+# 3. Diagrama ERD generado por pgAdmin
+# 4. Estructura y columnas de tablas clave
+# 5. Restricciones (PK, FK, UNIQUE, CHECK)
+# 6. Índices creados
+# 7. Consulta 1 + resultados
+# 8. EXPLAIN ANALYZE 1
+# 9. Consulta 2 + resultados
+# 10. EXPLAIN ANALYZE 2
+# 11. Consulta 3 + resultados
+# 12. EXPLAIN ANALYZE 3

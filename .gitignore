@@ -1,0 +1,50 @@
+# =============================================================================
+# EXCLUSIONES DE SEGURIDAD Y ARCHIVOS LOCALES
+# =============================================================================
+
+# Binarios de PostgreSQL portátil
+pgsql/
+*.zip
+*.tar
+*.gz
+
+# Directorios de datos físicos y bases de datos locales
+data/
+pgdata/
+pgadmin_data/
+*.db
+*.sqlite
+*.sql.dump
+*.backup
+
+# Archivos de estado, procesos y logs del servidor
+*.log
+*.pid
+postmaster.pid
+server.log
+postgres.log
+
+# Variables de entorno y credenciales privadas
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.cert
+*.crt
+id_rsa
+id_ed25519
+
+# Archivos temporales y cachés
+*.tmp
+*.temp
+*~
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editores y entornos de desarrollo
+.vscode/
+.idea/
+*.suo
+*.user
