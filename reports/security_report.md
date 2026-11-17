@@ -204,13 +204,12 @@ La ejecución del script `sql/11_security_validation.sql` contra la base activa 
 | Registros con `existencia < 0` en `inventario` | **0** | Cumplimiento total |
 | Renglones huérfanos en `detalle_venta` | **0** | Consistencia referencial íntegra |
 | Renglones huérfanos en `detalle_compra` | **0** | Consistencia referencial íntegra |
-| Renglones huérfanos en `movimiento_inventario` | **0** | Trazabilidad completa |
 
 ### 5.3 Control Transaccional ACID y Manejo de Stock Insuficiente
 
 En `sql/07_transactions.sql` se validó el comportamiento transaccional del motor:
 - **Transacción Exitosa (COMMIT):** Registro simultáneo de cabecera de venta, renglones de detalle, decremento de existencia en `inventario` y generación del kardex en `movimiento_inventario` bajo una sola transacción cerrada con `COMMIT`.
-- **Protección Transaccional (ROLLBACK):** Cuando un intento de venta exige una cantidad superior a la existencia disponible, la lógica de validación lanza una excepción controlada (`stock_insuficiente_exception`), provocando un `ROLLBACK` automático. El motor deshace cualquier inserción previa en `venta` y `detalle_venta`, garantizando que jamás existan ventas asentadas sin respaldo físico de inventario.
+- **Protección ante stock insuficiente:** Cuando un intento de venta exige una cantidad superior a la existencia disponible, el `UPDATE ... WHERE existencia >= v_cantidad_solicitada` afecta 0 filas y la validación ejecuta `RAISE EXCEPTION 'Stock insuficiente...'`. El manejador `EXCEPTION` del bloque PL/pgSQL revierte los cambios realizados dentro de ese bloque, evitando que queden cabeceras o detalles de venta correspondientes al intento inválido.
 
 ---
 
