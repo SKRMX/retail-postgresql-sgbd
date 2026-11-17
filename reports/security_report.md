@@ -53,10 +53,10 @@ Se implementó un modelo de control de acceso basado en roles (**RBAC** - *Role-
 │ NOLOGIN          │           │ NOLOGIN          │           │ NOLOGIN          │
 ├──────────────────┤           ├──────────────────┤           ├──────────────────┤
 │ - SELECT en      │           │ - SELECT global  │           │ - ALL PRIVILEGES │
-│   todas las 11   │           │ - INSERT/UPDATE  │           │   en public y    │
-│   tablas         │           │   transaccional  │           │   audit          │
-│ - Sin permisos   │           │ - UPDATE sólo en │           │ - Propietario de │
-│   de escritura   │           │   inventario(    │           │   esquemas       │
+│   todas las 11   │           │ - INSERT/UPDATE  │           │   en public      │
+│   tablas         │           │   transaccional  │           │ - USAGE en audit │
+│ - Sin permisos   │           │ - UPDATE sólo en │           │ - SELECT en      │
+│   de escritura   │           │   inventario(    │           │   change_log     │
 │                  │           │     existencia,  │           │ - rolsuper=false │
 │                  │           │     updated_at)  │           │ - rolcreaterole= │
 │                  │           │ - Sin acceso DML │           │   false          │
@@ -73,7 +73,7 @@ Se implementó un modelo de control de acceso basado en roles (**RBAC** - *Role-
    - `USAGE, SELECT` sobre todas las secuencias asociadas para permitir la generación automática de folios.
    - **Control a nivel de columna:** En la tabla `inventario`, se prohíbe el `UPDATE` global. El operador solo puede modificar las columnas `existencia` y `updated_at`, impidiendo la alteración arbitraria de las claves foráneas compuestas `(id_sucursal, id_producto)`.
    - **Restricción sobre catálogos:** Se prohíbe de forma tajante `INSERT`, `UPDATE` o `DELETE` sobre las tablas maestras `categoria`, `producto`, `proveedor` y `sucursal`.
-3. **`retail_admin`** (`NOLOGIN`): Administrador delegado del esquema de negocio. Posee `ALL PRIVILEGES` sobre los esquemas `public` y `audit`, pero mantiene `rolsuper = false` y `rolcreaterole = false`, garantizando que un compromiso de este rol no comprometa el clúster global de PostgreSQL.
+3. **`retail_admin`** (`NOLOGIN`): Administrador delegado del esquema de negocio. Posee `ALL PRIVILEGES` sobre las tablas y secuencias de aplicación en el esquema `public`, y sobre el esquema `audit` se le concede `USAGE ON SCHEMA audit`, `SELECT ON audit.change_log` y `USAGE, SELECT` sobre su secuencia (`audit.change_log_audit_id_seq`). Mantiene `rolsuper = false` y `rolcreaterole = false`, garantizando que un compromiso de este rol no comprometa el clúster global de PostgreSQL ni permita alterar la bitácora.
 
 ### 2.2 Revocación de Privilegios Residuales de `PUBLIC`
 
@@ -86,7 +86,7 @@ REVOKE ALL ON ALL SEQUENCES IN SCHEMA public FROM PUBLIC;
 REVOKE ALL ON ALL ROUTINES IN SCHEMA public FROM PUBLIC;
 ```
 
-La consulta de validación ejecutada en `sql/11_security_validation.sql` arrojó exactamente **0 privilegios residuales** para `PUBLIC`, certificando que ningún usuario no autenticado o no autorizado puede leer o escribir en la base de datos.
+La consulta a `information_schema.role_table_grants` confirmó **0 privilegios residuales de tabla para `PUBLIC`**. Adicionalmente, el script revoca permisos sobre tablas, secuencias y rutinas para garantizar que ningún usuario no autenticado o no autorizado pueda acceder a la base de datos.
 
 ---
 
@@ -178,10 +178,11 @@ La integridad de los datos en `retail_inventory_db` se sustenta en una doble cap
 
 - **Claves Primarias (11 PK):** Todas las tablas poseen clave primaria formal. Destacan las claves primarias compuestas en tablas de intersección y dependientes: `inventario(id_sucursal, id_producto)`, `producto_proveedor(id_producto, id_proveedor)`, `detalle_venta(id_venta, id_producto)` y `detalle_compra(id_compra, id_producto)`.
 - **Claves Foráneas (14 FK):** Garantizan integridad referencial absoluta. Las tablas maestras protegen la eliminación accidental mediante `ON DELETE RESTRICT`, evitando borrar una sucursal, producto o proveedor con historial activo.
-- **Restricciones de Validación (69 CHECK):**
-  - Existencias no negativas: `CHECK (existencia >= 0)` en la tabla `inventario`.
-  - Importes y precios válidos: `CHECK (precio_unitario > 0)`, `CHECK (costo_unitario > 0)`, `CHECK (total >= 0)`.
-  - Coherencia temporal: `CHECK (fecha <= CURRENT_TIMESTAMP)`.
+- **Restricciones de Validación CHECK:**
+  El catálogo `information_schema.table_constraints` reportó 69 entradas clasificadas como CHECK; al inspeccionar `pg_constraint` se identificaron 17 expresiones CHECK explícitas definidas en el esquema. Para describir las reglas de negocio se utilizan estas 17 expresiones explícitas, mientras que las 52 restantes corresponden a restricciones `NOT NULL` que PostgreSQL mapea internamente bajo la categoría CHECK en el estándar de información:
+  - Existencias no negativas: `CHECK (existencia >= 0)` en `inventario`.
+  - Costos, precios y totales: `CHECK (costo_unitario > 0)` y `CHECK (total >= 0)` en `compra`; `CHECK (cantidad > 0)`, `CHECK (costo_unitario > 0)` y `CHECK (subtotal >= 0)` en `detalle_compra`; `CHECK (total >= 0)` en `venta`; `CHECK (cantidad > 0)`, `CHECK (precio_unitario > 0)` y `CHECK (subtotal >= 0)` en `detalle_venta`; `CHECK (costo_proveedor > 0)` y `CHECK (tiempo_entrega_dias >= 0)` en `producto_proveedor`.
+  - Validaciones de dominio y estados: `CHECK (cantidad <> 0)` y `CHECK (tipo_movimiento IN ('ENTRADA', 'SALIDA', 'AJUSTE', 'TRASPASO'))` en `movimiento_inventario`; `CHECK (estado IN ('ACTIVO', 'INACTIVO'))` en `producto` y `proveedor`.
 - **Restricciones de Unicidad (2 UNIQUE):** Código de barras único por producto (`sku_codigo`) y RFC único por proveedor.
 
 ### 5.2 Resultados Reales de Validación de Integridad
@@ -190,7 +191,8 @@ La ejecución del script `sql/11_security_validation.sql` contra la base activa 
 
 | Métrica de Integridad Verificada | Resultado Obtenido | Estado de Cumplimiento |
 | :--- | :--- | :--- |
-| Conteo de restricciones CHECK activas | **69** | 100% implementadas |
+| Entradas clasificadas como CHECK en `information_schema` | **69** | 100% verificadas (incluye cláusulas NOT NULL) |
+| Expresiones CHECK explícitas de negocio en `pg_constraint` | **17** | 100% implementadas |
 | Conteo de claves foráneas activas | **14** | 100% implementadas |
 | Conteo de claves primarias activas | **11** | 100% implementadas |
 | Conteo de restricciones UNIQUE activas | **2** | 100% implementadas |
@@ -214,33 +216,34 @@ En `sql/07_transactions.sql` se validó el comportamiento transaccional del moto
 En `sql/10_audit.sql` se diseñó e implementó un esquema de auditoría no intrusivo pero exhaustivo:
 - **Esquema Aislado:** `audit`.
 - **Tabla Central:** `audit.change_log`.
-- **Mecanismo:** Triggers de nivel de fila (`FOR EACH ROW`) ejecutados en modo `AFTER INSERT OR UPDATE OR DELETE`.
+- **Función de Auditoría:** `audit.log_row_change()`.
+- **Mecanismo:** Triggers de nivel de fila (`FOR EACH ROW`) ejecutados en modo `AFTER INSERT OR UPDATE OR DELETE EXECUTE FUNCTION audit.log_row_change()`.
 
 ```sql
 CREATE TABLE audit.change_log (
-    id BIGSERIAL PRIMARY KEY,
-    table_name VARCHAR(64) NOT NULL,
-    operation VARCHAR(10) NOT NULL,
-    record_id VARCHAR(128),
-    old_data JSONB,
-    new_data JSONB,
-    changed_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    performed_by VARCHAR(64) NOT NULL DEFAULT CURRENT_USER,
-    session_user_name VARCHAR(64) NOT NULL DEFAULT SESSION_USER,
-    client_ip INET DEFAULT inet_client_addr(),
-    application_name TEXT DEFAULT current_setting('application_name', true),
-    transaction_id BIGINT DEFAULT txid_current()
+    audit_id           BIGSERIAL PRIMARY KEY,
+    recorded_at        TIMESTAMPTZ NOT NULL DEFAULT clock_timestamp(),
+    transaction_id     BIGINT NOT NULL DEFAULT txid_current(),
+    session_user_name  TEXT NOT NULL DEFAULT session_user,
+    effective_user     TEXT NOT NULL DEFAULT current_user,
+    application_name   TEXT DEFAULT current_setting('application_name', true),
+    client_address     INET DEFAULT inet_client_addr(),
+    schema_name        TEXT NOT NULL,
+    table_name         TEXT NOT NULL,
+    operation          TEXT NOT NULL CHECK (operation IN ('INSERT', 'UPDATE', 'DELETE')),
+    old_data           JSONB,
+    new_data           JSONB
 );
 ```
 
 ### 6.2 Análisis de Seguridad: `session_user` vs `current_user`
 
 Un vector común de evasión de auditoría ocurre cuando una función se ejecuta con la cláusula `SECURITY DEFINER` (asumiendo los privilegios del propietario de la función, habitualmente un superusuario o administrador). Si la bitácora registra únicamente `current_user`, el registro de auditoría mostraría erróneamente al administrador como autor del cambio.
-- **Solución Implementada:** La bitácora captura simultáneamente `performed_by` (`current_user`) y `session_user_name` (`session_user`). `session_user` refleja de manera inmutable la identidad de la cuenta de conexión real que abrió la sesión, garantizando que ninguna elevación de privilegios interna oculte la autoría del operador.
+- **Solución Implementada:** La bitácora captura simultáneamente `effective_user` (`current_user`) y `session_user_name` (`session_user`). `session_user` refleja de manera inmutable la identidad de la cuenta de conexión real que abrió la sesión, garantizando que ninguna elevación de privilegios interna oculte la autoría del operador.
 
 ### 6.3 Triggers Activos
 
-Se desplegaron 6 triggers que cubren la totalidad de los flujos monetarios y de mercancía:
+Se desplegaron 6 triggers asociados a la función `audit.log_row_change()` que cubren la totalidad de los flujos monetarios y de mercancía:
 1. `trg_audit_compra` sobre `compra`
 2. `trg_audit_detalle_compra` sobre `detalle_compra`
 3. `trg_audit_venta` sobre `venta`
@@ -255,12 +258,14 @@ Se ejecutó una prueba transaccional sobre el registro `(id_sucursal=3, id_produ
 2. Se decrementó la existencia de 4 a 3, restaurando su marca temporal original.
 3. Se aplicó `COMMIT`.
 
+Es fundamental señalar que la tabla `audit.change_log` no almacena una columna física denominada `record_id`. La identificación del registro afectado (`id_sucursal = 3`, `id_producto = 125`) procede directamente de los campos deserializados de los documentos JSONB contenidos en `old_data` y `new_data`.
+
 **Registros Reales Generados en `audit.change_log`:**
 
-| id | table_name | operation | record_id | old_data | new_data | session_user_name | transaction_id |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **1** | `inventario` | `UPDATE` | `(3, 125)` | `{"existencia": 3, "updated_at": "..."}` | `{"existencia": 4, "updated_at": "..."}` | `postgres` | **1686** |
-| **2** | `inventario` | `UPDATE` | `(3, 125)` | `{"existencia": 4, "updated_at": "..."}` | `{"existencia": 3, "updated_at": "..."}` | `postgres` | **1686** |
+| audit_id | table_name | operation | id_sucursal (JSONB) | id_producto (JSONB) | old_data | new_data | session_user_name | transaction_id |
+| :---: | :--- | :--- | :---: | :---: | :--- | :--- | :--- | :---: |
+| **1** | `inventario` | `UPDATE` | **3** | **125** | `{"existencia": 3, "updated_at": "..."}` | `{"existencia": 4, "updated_at": "..."}` | `postgres` | **1686** |
+| **2** | `inventario` | `UPDATE` | **3** | **125** | `{"existencia": 4, "updated_at": "..."}` | `{"existencia": 3, "updated_at": "..."}` | `postgres` | **1686** |
 
 **Hallazgo Técnico:** Ambos eventos comparten exactamente el mismo `transaction_id = 1686`, demostrando que el sistema de auditoría preserva la correlación transaccional y permite reconstruir la secuencia temporal exacta de modificaciones para auditorías forenses.
 
@@ -447,9 +452,10 @@ La siguiente matriz delimita las responsabilidades operativas y de seguridad sob
 
 La implementación y auditoría de controles de seguridad en el proyecto `retail-postgresql-sgbd` demuestra que una base de datos relacional de retail de alto volumen (más de 357,000 registros) puede operar bajo los principios más rigurosos de **Defensa en Profundidad**:
 
-1. **Confidencialidad:** Asegurada mediante la separación estricta de funciones en roles NOLOGIN (`retail_readonly`, `retail_operator`, `retail_admin`), revocación total de privilegios genéricos a `PUBLIC` y aislamiento de credenciales en el repositorio.
-2. **Integridad:** Protegida en una arquitectura multicapa que combina 11 claves primarias, 14 claves foráneas, 69 restricciones CHECK activas (0 inventarios negativos) y control de transacciones ACID que aborta con `ROLLBACK` cualquier operación inconsistente.
-3. **Trazabilidad y No Repudio:** Implementada mediante un esquema de auditoría en tiempo real con 6 triggers que registran de forma inmutable el usuario real de sesión (`session_user_name`), marca temporal y correlación por identificador de transacción (`transaction_id`).
-4. **Disponibilidad y Continuidad:** Comprobada empíricamente mediante un proceso de respaldo comprimido de 5.89 MB con verificación criptográfica SHA-256 y un procedimiento de restauración automatizado que recupera el **100% de los datos** en menos de 20 segundos sin comprometer la base de datos operativa.
+1. **Confidencialidad:** Asegurada mediante la separación estricta de funciones en roles NOLOGIN (`retail_readonly`, `retail_operator`, `retail_admin`), revocación total de privilegios genéricos a `PUBLIC` (0 privilegios residuales de tabla en `information_schema.role_table_grants`) y aislamiento de credenciales en el repositorio.
+2. **Integridad:** Protegida en una arquitectura multicapa que combina 11 claves primarias, 14 claves foráneas, 69 restricciones CHECK en el catálogo (17 restricciones explícitas de lógica de negocio en `pg_constraint` más 52 restricciones internas derivadas de columnas `NOT NULL`), 0 inventarios negativos (`existencia < 0 = 0`) y control de transacciones ACID que aborta con `ROLLBACK` cualquier operación inconsistente.
+3. **Trazabilidad y No Repudio:** Implementada mediante un esquema de auditoría en tiempo real con 6 triggers asociados a `audit.log_row_change()` que registran de forma inmutable el usuario real de sesión (`session_user_name`), marca temporal, estados previo y posterior en JSONB (sin requerir columna redundante `record_id`), y correlación por identificador de transacción (`transaction_id`).
+4. **Disponibilidad y Continuidad:** Comprobada empíricamente mediante un proceso de respaldo comprimido de 5.89 MB con verificación criptográfica SHA-256 y un procedimiento de restauración automatizado que recupera el **100% de los datos** (tiempo observado de restauración en prueba: 18.4 segundos en entorno local, garantizando ampliamente los objetivos de política propuestos de RPO $\le$ 24 horas y RTO $\le$ 2 horas) sin comprometer la base de datos operativa.
 
 El sistema se alinea plenamente con las mejores prácticas del **CIS PostgreSQL Benchmark**, normativas **PCI-DSS v4.0** e **ISO/IEC 27001**, dejando una infraestructura completamente documentada, verificada y lista para soportar la operación segura de la cadena retail.
+

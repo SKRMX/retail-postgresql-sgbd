@@ -62,7 +62,9 @@ audit.change_log                                            2                   
 
 5. CONCLUSION TECNICA DE CONTINUIDAD OPERATIVA
 -----------------------------------------------------------------------------
-El procedimiento de respaldo lógico en formato custom y restauración controlada
-demuestra un RPO efectivo de 0 horas respecto al momento del respaldo y un RTO
-de recuperación menor a 20 segundos para un volumen superior a 357,000 registros,
-validando que el respaldo es 100% consistente, recuperable y autónomo.
+- RPO objetivo de la política propuesta: máximo 24 horas con respaldo diario.
+- El respaldo restaurado corresponde exactamente al punto temporal en que fue generado.
+- Tiempo observado de restauración en esta prueba: 18.4 segundos (tiempo medido
+  de recuperación para un volumen superior a 357,000 registros).
+El respaldo es 100% consistente, recuperable e íntegro.
+
