@@ -1,0 +1,34 @@
+# Evidencias Visuales de Seguridad, Auditoría y Recuperación
+
+Este directorio contiene las capturas de pantalla reales (resolución nativa **1920 × 1080**) que demuestran la implementación, validación y verificación de los controles de seguridad de base de datos para el proyecto **`retail-postgresql-sgbd`** sobre **PostgreSQL 17.2**.
+
+Las evidencias combinan la interfaz gráfica de administración **pgAdmin 4** (para inspección de catálogos, roles, privilegios, triggers y eventos de auditoría) con la terminal de administración **Windows PowerShell** (para la ejecución y verificación criptográfica de los procedimientos automatizados de respaldo y restauración).
+
+---
+
+## Índice de Evidencias de Seguridad
+
+| Archivo | Control Técnico | Contenido Visual Mostrado | Demostración Técnica |
+| :--- | :--- | :--- | :--- |
+| [`01_security_roles.png`](01_security_roles.png) | **Roles y Separación de Funciones** | Query Tool de pgAdmin 4 consultando `pg_roles` para los roles `retail_readonly`, `retail_operator` y `retail_admin`. | Demuestra la creación física de tres roles de grupo con atributo `rolcanlogin = false`, `rolsuper = false` y `rolcreaterole = false`. Evita el uso de credenciales de superusuario para operaciones cotidianas y establece la base del control de acceso basado en roles (RBAC). |
+| [`02_role_privileges.png`](02_role_privileges.png) | **Principio de Menor Privilegio** | Query Tool de pgAdmin 4 inspeccionando `information_schema.role_table_grants` y privilegios de columna en la tabla `inventario`. | Demuestra que `retail_readonly` solo posee permisos de `SELECT`; `retail_operator` tiene permisos de lectura global, DML en tablas transaccionales (`venta`, `compra`, `movimiento`) y `UPDATE` restringido estrictamente a las columnas `(existencia, updated_at)` de `inventario`, sin privilegios sobre catálogos maestros (`producto`, `categoria`, `sucursal`, `proveedor`). Se confirma revocación total de permisos sobre `PUBLIC`. |
+| [`03_audit_triggers.png`](03_audit_triggers.png) | **Mecanismo de Auditoría Automatizada** | Explorador de objetos y Query Tool en pgAdmin 4 consultando `information_schema.triggers` y el esquema `audit`. | Evidencia el despliegue de los 6 triggers de auditoría (`trg_audit_*`) asociados a la función `audit.fn_audit_log_change()` en las entidades transaccionales críticas: `compra`, `detalle_compra`, `detalle_venta`, `inventario`, `movimiento_inventario` y `venta`. |
+| [`04_audit_events.png`](04_audit_events.png) | **Trazabilidad y Bitácora de Eventos** | Query Tool de pgAdmin 4 con la consulta analítica sobre la tabla `audit.change_log`. | Demuestra la captura real e inmutable de eventos DML generados durante la prueba transaccional sobre el Producto 125 en Sucursal 3: registra marca temporal precisa, usuario de sesión (`postgres`), tipo de operación (`UPDATE`), identificador de transacción (`transaction_id = 1686`), estado previo (`old_data`) y estado posterior (`new_data`). |
+| [`05_integrity_validation.png`](05_integrity_validation.png) | **Validación de Integridad y Restricciones** | Query Tool de pgAdmin 4 ejecutando las comprobaciones de `sql/11_security_validation.sql`. | Confirma la integridad estructural del esquema: 0 privilegios residuales en `PUBLIC`, 11 claves primarias, 14 claves foráneas, 69 restricciones `CHECK`, 2 restricciones `UNIQUE`, 0 inventarios negativos (`existencia < 0 = 0`) y 0 registros huérfanos entre transacciones y sus líneas de detalle. |
+| [`06_backup_success.png`](06_backup_success.png) | **Respaldo Lógico Verificable** | Consola de administración PowerShell ejecutando el script automatizado `backup_database.ps1`. | Demuestra la ejecución exitosa de las 4 fases de respaldo: generación de archivo de volcado custom comprimido (`-Fc -Z9`) de 5.89 MB (`retail_inventory_db_20261117_144334.dump`), volcado de roles y objetos globales (`pg_dumpall --globals-only`), cálculo de checksums SHA-256 y aplicación de la política de retención de 14 días. |
+| [`07_backup_checksum.png`](07_backup_checksum.png) | **Verificación Criptográfica de Integridad** | Consola PowerShell ejecutando `Get-Content` del archivo `.sha256` y comparando con `Get-FileHash -Algorithm SHA256`. | Comprueba la coincidencia exacta al 100% del hash criptográfico (`3A1DB28852269AA55FB0287597C7BA0045B5518E3C320D896DF51C068ED7C3B9`), garantizando que el archivo de respaldo no ha sufrido corrupción ni alteraciones no autorizadas. Cumple con la política de seguridad de no exponer el contenido del archivo de objetos globales. |
+| [`08_restore_success.png`](08_restore_success.png) | **Restauración Automatizada en Entorno Aislado** | Consola PowerShell ejecutando `restore_database.ps1` con el parámetro `-RecreateTarget`. | Evidencia el procedimiento de recuperación sobre la base independiente `retail_inventory_restore_test`: validación previa obligatoria del checksum SHA-256, recreación limpia de la base, ejecución de `pg_restore` sin errores críticos (código de salida 0) y validación inmediata del catálogo recuperado (5,000 productos). |
+| [`09_restored_database_validation.png`](09_restored_database_validation.png) | **Consistencia y Recuperación Total de Datos** | pgAdmin 4 conectado a `retail_inventory_restore_test` ejecutando la consulta de validación de filas. | Demuestra la recuperación íntegra del 100% de la información: las 11 tablas relacionales contienen exactamente los 357,899 registros originales (20 categorías, 12,000 compras, 27,600 detalles compra, 86,167 detalles venta, 50,000 inventarios, 120,001 movimientos, 5,000 productos, 10,000 producto-proveedor, 100 proveedores, 10 sucursales, 47,001 ventas) y los 2 registros de auditoría en `audit.change_log`. |
+
+---
+
+## Especificaciones del Entorno de Seguridad
+
+- **Motor SGBD**: PostgreSQL 17.2 (compiled by Visual C++ build 1942, 64-bit)
+- **Herramienta de Administración Gráfica**: pgAdmin 4 v9.19
+- **Herramienta de Automatización de Terminal**: Windows PowerShell 5.1 / PowerShell 7
+- **Base de Datos Principal**: `retail_inventory_db`
+- **Base de Datos de Validación de Restauración**: `retail_inventory_restore_test`
+- **Algoritmo Criptográfico de Integridad**: SHA-256 (Secure Hash Algorithm 256-bit)
+- **Formato de Respaldo**: Custom PostgreSQL (`pg_dump -Fc --compress=9`)
+- **Resolución de Captura**: 1920 × 1080 píxeles a color (formato PNG nativo)

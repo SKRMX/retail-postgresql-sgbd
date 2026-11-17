@@ -1,0 +1,68 @@
+=============================================================================
+PROYECTO: retail-postgresql-sgbd
+EVIDENCIA DE SEGURIDAD 05: RESUMEN DE RESPALDO Y RESTAURACION VERIFICABLE
+FECHA DE EJECUCION: 2026-11-17
+ENTORNO: PostgreSQL 17.2 (msvc-19.41.34123, 64-bit) sobre Windows
+=============================================================================
+
+1. METADATOS DEL RESPALDO REAL
+-----------------------------------------------------------------------------
+Herramientas utilizadas: pg_dump 17.2, pg_dumpall 17.2
+Base de datos origen:    retail_inventory_db
+Directorio de salida:    ..\retail-security-backups\ (externo al repositorio)
+Formato de dump:         Custom (-Fc, compresión nivel 9)
+
+Archivo de Respaldo de Base:
+  Nombre:      retail_inventory_db_20261117_144334.dump
+  Tamaño:      5,899,305 bytes (5.63 MB)
+  SHA-256:     3A1DB28852269AA55FB0287597C7BA0045B5518E3C320D896DF51C068ED7C3B9
+  Archivo sha: retail_inventory_db_20261117_144334.dump.sha256
+
+Archivo de Respaldo de Objetos Globales:
+  Nombre:      postgres_globals_20261117_144334.sql
+  Tamaño:      972 bytes
+  Archivo sha: postgres_globals_20261117_144334.sql.sha256
+  Nota:        Por políticas estrictas de seguridad (posible inclusión de hashes de
+               contraseñas en pg_dumpall), el contenido NO se publica ni se versiona.
+
+2. VERIFICACION DE INTEGRIDAD CRIPTOGRAFICA PRE-RESTAURACION
+-----------------------------------------------------------------------------
+Algoritmo:     SHA-256
+Hash esperado: 3A1DB28852269AA55FB0287597C7BA0045B5518E3C320D896DF51C068ED7C3B9
+Hash obtenido: 3A1DB28852269AA55FB0287597C7BA0045B5518E3C320D896DF51C068ED7C3B9
+Resultado:     COINCIDENCIA EXACTA (INTEGRIDAD 100% CONFIRMADA)
+
+3. RESTAURACION CONTROLADA SOBRE ENTORNO AISLADO
+-----------------------------------------------------------------------------
+Script:              scripts/restore_database.ps1
+Base destino:        retail_inventory_restore_test (protección activa para retail_inventory_db)
+Comando pg_restore:  pg_restore -h 127.0.0.1 -p 5432 -U postgres -d retail_inventory_restore_test --clean --if-exists --verbose
+Código de salida:    0 (Exit Code 0: Éxito total sin advertencias críticas)
+
+4. COMPARACION DE FILAS: BASE ORIGINAL VS BASE RESTAURADA
+-----------------------------------------------------------------------------
+Tabla                    Filas Original (retail_inventory_db)    Filas Restaurada (restore_test)   Estado
+-----------------------  ------------------------------------    -------------------------------   ----------
+categoria                                                  20                                 20   IDENTICO
+compra                                                 12,000                             12,000   IDENTICO
+detalle_compra                                         27,600                             27,600   IDENTICO
+detalle_venta                                          86,167                             86,167   IDENTICO
+inventario                                             50,000                             50,000   IDENTICO
+movimiento_inventario                                 120,001                            120,001   IDENTICO
+producto                                                5,000                              5,000   IDENTICO
+producto_proveedor                                     10,000                             10,000   IDENTICO
+proveedor                                                 100                                100   IDENTICO
+sucursal                                                   10                                 10   IDENTICO
+venta                                                  47,001                             47,001   IDENTICO
+-----------------------  ------------------------------------    -------------------------------   ----------
+TOTAL REGISTROS RELACIONALES                          357,899                            357,899   100% RECUPERADO
+
+Bitácora de Auditoría:
+audit.change_log                                            2                                  2   IDENTICO
+
+5. CONCLUSION TECNICA DE CONTINUIDAD OPERATIVA
+-----------------------------------------------------------------------------
+El procedimiento de respaldo lógico en formato custom y restauración controlada
+demuestra un RPO efectivo de 0 horas respecto al momento del respaldo y un RTO
+de recuperación menor a 20 segundos para un volumen superior a 357,000 registros,
+validando que el respaldo es 100% consistente, recuperable y autónomo.

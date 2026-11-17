@@ -7,15 +7,20 @@ pgsql/
 *.zip
 *.tar
 *.gz
+*.rar
 
 # Directorios de datos físicos y bases de datos locales
 data/
 pgdata/
 pgadmin_data/
+backups/
 *.db
 *.sqlite
 *.sql.dump
+*.dump
 *.backup
+*.sha256
+postgres_globals_*.sql
 
 # Archivos de estado, procesos y logs del servidor
 *.log
