@@ -80,13 +80,12 @@ Se implementó un modelo de control de acceso basado en roles (**RBAC** - *Role-
 En PostgreSQL, el rol predeterminado `PUBLIC` posee por omisión permisos implícitos sobre el esquema `public`. En el script `sql/09_security_roles.sql` se ejecutó:
 
 ```sql
-REVOKE ALL ON SCHEMA public FROM PUBLIC;
 REVOKE ALL ON ALL TABLES IN SCHEMA public FROM PUBLIC;
 REVOKE ALL ON ALL SEQUENCES IN SCHEMA public FROM PUBLIC;
-REVOKE ALL ON ALL ROUTINES IN SCHEMA public FROM PUBLIC;
+REVOKE CREATE ON SCHEMA public FROM PUBLIC;
 ```
 
-La consulta a `information_schema.role_table_grants` confirmó **0 privilegios residuales de tabla para `PUBLIC`**. Adicionalmente, el script revoca permisos sobre tablas, secuencias y rutinas para garantizar que ningún usuario no autenticado o no autorizado pueda acceder a la base de datos.
+La consulta a `information_schema.role_table_grants` confirmó **0 privilegios residuales de tabla para `PUBLIC`**. Adicionalmente, el script revoca privilegios sobre secuencias y el permiso `CREATE` del esquema `public`. Esta comprobación demuestra el cierre de privilegios de objetos para `PUBLIC`; el permiso de conexión a la base y la autenticación se administran de forma independiente.
 
 ---
 
@@ -161,13 +160,13 @@ La integridad de los datos en `retail_inventory_db` se sustenta en una doble cap
 │ 1. INTEGRIDAD ESTRUCTURAL DECLARATIVA                                  │
 │    ├── 11 Claves Primarias (PK)                                        │
 │    ├── 14 Claves Foráneas (FK) con ON DELETE RESTRICT / CASCADE        │
-│    ├── 69 Restricciones CHECK (existencia >= 0, precios > 0, fechas)   │
-│    └── 2 Restricciones UNIQUE (código producto, RFC proveedor)         │
+│    ├── 69 entradas CHECK en information_schema; 17 reglas explícitas  │
+│    └── 2 UNIQUE explícitas: categoria.nombre y producto.sku            │
 ├────────────────────────────────────────────────────────────────────────┤
 │ 2. INTEGRIDAD TRANSACCIONAL DINÁMICA (ACID)                            │
 │    ├── Transacciones atómicas (BEGIN ... COMMIT / ROLLBACK)            │
-│    ├── Excepción personalizada: stock_insuficiente_exception           │
-│    └── Bloqueo pesimista / aislamiento Read Committed                  │
+│    ├── UPDATE condicionado por existencia suficiente                   │
+│    └── RAISE EXCEPTION y ROLLBACK ante operaciones inválidas           │
 ├────────────────────────────────────────────────────────────────────────┤
 │ 3. INTEGRIDAD DE BITÁCORA FORENSE                                      │
 │    └── Triggers AFTER INSERT OR UPDATE OR DELETE en 6 tablas críticas  │
@@ -178,12 +177,18 @@ La integridad de los datos en `retail_inventory_db` se sustenta en una doble cap
 
 - **Claves Primarias (11 PK):** Todas las tablas poseen clave primaria formal. Destacan las claves primarias compuestas en tablas de intersección y dependientes: `inventario(id_sucursal, id_producto)`, `producto_proveedor(id_producto, id_proveedor)`, `detalle_venta(id_venta, id_producto)` y `detalle_compra(id_compra, id_producto)`.
 - **Claves Foráneas (14 FK):** Garantizan integridad referencial absoluta. Las tablas maestras protegen la eliminación accidental mediante `ON DELETE RESTRICT`, evitando borrar una sucursal, producto o proveedor con historial activo.
-- **Restricciones de Validación CHECK:**
-  El catálogo `information_schema.table_constraints` reportó 69 entradas clasificadas como CHECK; al inspeccionar `pg_constraint` se identificaron 17 expresiones CHECK explícitas definidas en el esquema. Para describir las reglas de negocio se utilizan estas 17 expresiones explícitas, mientras que las 52 restantes corresponden a restricciones `NOT NULL` que PostgreSQL mapea internamente bajo la categoría CHECK en el estándar de información:
-  - Existencias no negativas: `CHECK (existencia >= 0)` en `inventario`.
-  - Costos, precios y totales: `CHECK (costo_unitario > 0)` y `CHECK (total >= 0)` en `compra`; `CHECK (cantidad > 0)`, `CHECK (costo_unitario > 0)` y `CHECK (subtotal >= 0)` en `detalle_compra`; `CHECK (total >= 0)` en `venta`; `CHECK (cantidad > 0)`, `CHECK (precio_unitario > 0)` y `CHECK (subtotal >= 0)` en `detalle_venta`; `CHECK (costo_proveedor > 0)` y `CHECK (tiempo_entrega_dias >= 0)` en `producto_proveedor`.
-  - Validaciones de dominio y estados: `CHECK (cantidad <> 0)` y `CHECK (tipo_movimiento IN ('ENTRADA', 'SALIDA', 'AJUSTE', 'TRASPASO'))` en `movimiento_inventario`; `CHECK (estado IN ('ACTIVO', 'INACTIVO'))` en `producto` y `proveedor`.
-- **Restricciones de Unicidad (2 UNIQUE):** Código de barras único por producto (`sku_codigo`) y RFC único por proveedor.
+- **Restricciones de Validación CHECK:**  
+  El catálogo `information_schema.table_constraints` reportó 69 entradas clasificadas como CHECK; al inspeccionar `pg_constraint` se identificaron **17 expresiones CHECK explícitas** definidas en el esquema. Para describir las reglas de negocio se utilizan estas 17 expresiones explícitas:
+  - `producto`: `precio_compra >= 0`, `precio_venta >= 0` y `precio_venta >= precio_compra`.
+  - `producto_proveedor`: `costo_referencia >= 0`.
+  - `inventario`: `existencia >= 0` y `stock_minimo >= 0`.
+  - `movimiento_inventario`: `tipo IN ('ENTRADA', 'SALIDA', 'AJUSTE')` y `cantidad > 0`.
+  - `venta`: `total >= 0`.
+  - `detalle_venta`: `cantidad > 0`, `precio_unitario >= 0` y `subtotal >= 0`.
+  - `compra`: `total >= 0` y `estado IN ('PENDIENTE', 'RECIBIDA', 'CANCELADA')`.
+  - `detalle_compra`: `cantidad > 0`, `costo_unitario >= 0` y `subtotal >= 0`.
+
+- **Restricciones de Unicidad (2 UNIQUE):** nombre único en `categoria(nombre)` y SKU único en `producto(sku)`.
 
 ### 5.2 Resultados Reales de Validación de Integridad
 
@@ -357,8 +362,8 @@ La restauración se ejecutó sobre la base de pruebas `retail_inventory_restore_
 
 ### 8.3 Análisis de RPO y RTO
 
-- **RPO (Recovery Point Objective):** En la política diaria implementada, el RPO teórico máximo es de **24 horas** de datos. En entornos de alta concurrencia de retail, este RPO se reduce a **0 segundos** implementando replicación física en tiempo real (*Streaming Replication*) con archivado continuo de segmentos WAL (*Write-Ahead Logging*).
-- **RTO (Recovery Time Objective):** El tiempo medido de ejecución de `restore_database.ps1` (incluyendo validación SHA-256, recreación de base, volcado completo de 357,899 filas y reconstrucción de índices) fue de **18.4 segundos**, muy por debajo de la meta académica de diseño (RTO < 4 horas).
+- **RPO (Recovery Point Objective):** La política propuesta de respaldo diario establece un **RPO objetivo máximo de 24 horas**. El respaldo validado conserva exactamente el estado existente al momento de su generación. Una arquitectura futura con replicación física y archivado continuo de WAL podría reducir ese objetivo, pero no forma parte de la implementación actual.
+- **RTO (Recovery Time Objective):** En esta prueba aislada, `restore_database.ps1` completó la recuperación observada en **18.4 segundos** para 357,899 registros, incluyendo la validación del respaldo y reconstrucción de objetos. Este tiempo es un resultado experimental del entorno local y **no constituye una garantía de producción**; la meta académica de contingencia se mantiene en **RTO ≤ 4 horas**.
 
 ---
 
